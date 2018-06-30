@@ -7,7 +7,7 @@
                 <span class='icon-bar'></span>
                 <span class='icon-bar'></span>
             </button>
-            <a class='navbar-brand' [routerLink]='["/"]'>TaskList</a>
+            <a class='navbar-brand' [routerLink]='["/"]'>Task list</a>
         </div>
         <div class='clearfix'></div>
         <div class='navbar-collapse collapse' [ngClass]='{ "in": isExpanded }'>
@@ -25,6 +25,16 @@
                 <li [routerLinkActive]='["link-active"]'>
                     <a [routerLink]='["/fetch-data"]' (click)='collapse()'>
                         <span class='glyphicon glyphicon-th-list'></span> Fetch data
+                    </a>
+                </li>
+              <li [routerLinkActive]='["link-active"]'>
+                    <a [routerLink]='["/add-task"]' (click)='collapse()'>
+                        <span class='glyphicon glyphicon-th-list'></span> Add Task
+                    </a>
+                </li>
+                <li [routerLinkActive]='["link-active"]'>
+                    <a [routerLink]='["/task-list"]' (click)='collapse()'>
+                        <span class='glyphicon glyphicon-th-list'></span> Task List
                     </a>
                 </li>
             </ul>

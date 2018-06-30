@@ -9,6 +9,11 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
+import { DxDataGridModule } from 'devextreme-angular';
+import { TaskListComponent } from './task-list/task-list.component';
+import { TaskGridComponent } from './task-grid/task-grid.component';
+import { TaskDetailsComponent } from './task-details/task-details.component';
+import { AddTaskComponent } from './add-task/add-task.component';
 
 @NgModule({
   declarations: [
@@ -16,16 +21,23 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
     NavMenuComponent,
     HomeComponent,
     CounterComponent,
-    FetchDataComponent
+    FetchDataComponent,
+    TaskListComponent,
+    TaskGridComponent,
+    TaskDetailsComponent,
+    AddTaskComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
+    DxDataGridModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
+      { path: 'add-task', component: AddTaskComponent },
+      { path: 'task-list', component: TaskListComponent },
     ])
   ],
   providers: [],
