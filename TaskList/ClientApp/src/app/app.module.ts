@@ -14,6 +14,15 @@ import { TaskListComponent } from './task-list/task-list.component';
 import { TaskGridComponent } from './task-grid/task-grid.component';
 import { TaskDetailsComponent } from './task-details/task-details.component';
 import { AddTaskComponent } from './add-task/add-task.component';
+import {
+  MatButtonModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatSelectModule,
+  MatChipsModule,
+  MatButtonToggleModule
+} from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -32,6 +41,14 @@ import { AddTaskComponent } from './add-task/add-task.component';
     HttpClientModule,
     FormsModule,
     DxDataGridModule,
+
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatChipsModule,
+    MatButtonToggleModule,
+    BrowserAnimationsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
@@ -40,7 +57,8 @@ import { AddTaskComponent } from './add-task/add-task.component';
       { path: 'task-list', component: TaskListComponent },
     ])
   ],
-  providers: [],
+  providers: [
+    { provide: 'TASK_URL', useValue: 'api/Tasks' }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

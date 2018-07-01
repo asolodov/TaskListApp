@@ -1,3 +1,17 @@
-<p>
-  task-details works!
-</p>
+<div *ngIf="task!= null">
+  <div>
+    Name: {{task.name}}
+  </div>
+  <div>
+    Description: {{task.description}}
+  </div>
+  <div>
+    Status: {{task.status}}
+  </div>
+  <div>
+    Priority: {{task.priority}}
+  </div>
+  <div>
+    Added: {{task.dateAdded}}
+  </div>
+</div>

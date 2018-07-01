@@ -1,1 +1,12 @@
-<app-task-grid></app-task-grid>
+<div class="list-header clearfix">
+  <mat-button-toggle-group name="statusFilter" aria-label="Status filter" value="all">
+    <mat-button-toggle value="all">All</mat-button-toggle>
+    <mat-button-toggle value="active">Active</mat-button-toggle>
+    <mat-button-toggle value="completed">Completed</mat-button-toggle>
+  </mat-button-toggle-group>
+  <button mat-raised-button (click)="refresh()" class="btn-refresh">Refresh</button>
+</div>
+<div>
+  <app-task-grid [tasks]="taskList" (onSelectionChange)="onTaskSelected($event)"></app-task-grid>
+  <app-task-details [task]="taskDetails"></app-task-details>
+</div>

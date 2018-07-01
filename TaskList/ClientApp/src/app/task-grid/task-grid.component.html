@@ -1,6 +1,12 @@
 <dx-data-grid id="gridContainer"
-              [dataSource]="dataSource"
-              [customizeColumns]="customizeColumns">
+              [dataSource]="tasks"
+              (onSelectionChanged)="onRowSelected($event)">
+  <dxo-selection mode="single"></dxo-selection>
+  <dxi-column dataField="name" caption="Name"></dxi-column>
+  <dxi-column dataField="priority" [width]="70" caption="Priority"></dxi-column>
+  <dxi-column dataField="dateAdded" caption="Added"></dxi-column>
+  <dxi-column dataField="dateAdded" caption="Time to complete"></dxi-column>
+  <dxi-column dataField="dateAdded" caption="Actions"></dxi-column>
   <dxo-load-panel [enabled]="false"></dxo-load-panel>
   <dxo-scrolling mode="infinite"></dxo-scrolling>
   <dxo-sorting mode="none"></dxo-sorting>

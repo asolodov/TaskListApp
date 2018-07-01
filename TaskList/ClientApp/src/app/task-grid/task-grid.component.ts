@@ -1,5 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Service, Employee } from '../app.service';
+import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
+import { Service, Employee } from '../../services/app.service';
+import { Task } from '../../models/app.models';
+import { TaskApiService } from '../../services/api/task-api.service';
+import { Event } from '@angular/router';
 
 @Component({
   selector: 'app-task-grid',
@@ -8,6 +11,12 @@ import { Service, Employee } from '../app.service';
   providers: [Service]
 })
 export class TaskGridComponent {
+
+  @Input()
+  tasks: Task[];
+
+  @Output()
+  onSelectionChange: EventEmitter<Task> = new EventEmitter();
 
   dataSource: any;
 
@@ -19,5 +28,9 @@ export class TaskGridComponent {
 
   customizeColumns(columns) {
     columns[0].width = 70;
+  }
+
+  onRowSelected(event) {
+    this.onSelectionChange.emit(event.currentSelectedRowKeys[0]);
   }
 }

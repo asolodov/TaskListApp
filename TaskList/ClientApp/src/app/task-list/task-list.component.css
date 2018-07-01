@@ -1,0 +1,8 @@
+.list-header
+{
+  padding-bottom:10px;
+}
+
+.list-header .btn-refresh{
+  float:right;
+}

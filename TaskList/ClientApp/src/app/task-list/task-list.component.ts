@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Task } from '../../models/app.models';
+import { TaskApiService } from '../../services/api/task-api.service';
 
 @Component({
   selector: 'app-task-list',
@@ -7,9 +9,30 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TaskListComponent implements OnInit {
 
-  constructor() { }
+  taskList: Task[];
+  taskDetails: Task;
+
+  constructor(private apiService: TaskApiService) {
+  }
 
   ngOnInit() {
+    this.uploadTasks();
+  }
+
+  onTaskSelected(task: Task) {
+    console.log(task);
+    this.taskDetails = task;
+  }
+
+  refresh() {
+    this.uploadTasks();
+  }
+
+  private uploadTasks() {
+
+    this.apiService.getTasks().subscribe(result => {
+      this.taskList = result;
+    })
   }
 
 }
