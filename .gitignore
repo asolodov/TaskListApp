@@ -3,3 +3,8 @@
 ################################################################################
 
 /.vs
+/TaskList.BusinessLogic/obj
+/TaskList.BusinessLogic/bin
+/TaskList.DataAccess/obj
+/TaskList.DataAccess/bin
+/TaskList/TaskList.db

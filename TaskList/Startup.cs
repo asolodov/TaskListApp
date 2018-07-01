@@ -3,8 +3,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TaskList.BusinessLogic.Tasks;
+using TaskList.BusinessLogic.Tasks.Interfaces;
+using TaskList.DataAccess;
+using TaskList.DataAccess.Repository;
+using TaskList.Infrastructure;
 
 namespace TaskList
 {
@@ -27,6 +33,11 @@ namespace TaskList
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            services.AddDbContext<TaskListDbContext>(options => options.UseSqlite("Data Source=TaskList.db"));
+
+            services.AddScoped<ITaskRepository, TaskRepository>();
+            services.AddScoped<ITaskService, TaskService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,6 +76,18 @@ namespace TaskList
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
+
+            AutoMapperConfig.RegisterMappings();
+            EnsureDbCreated(app);
+        }
+
+        private void EnsureDbCreated(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<TaskListDbContext>();
+                context.Database.EnsureCreated();
+            }
         }
     }
 }

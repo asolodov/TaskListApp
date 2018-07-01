@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace TaskList.DataContracts
+﻿namespace TaskList.DataContracts
 {
     public class Error
     {

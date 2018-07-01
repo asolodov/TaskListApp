@@ -22,8 +22,6 @@ export class AddTaskComponent {
   }
 
   save() {
-
-    this.apiService.getTasks().subscribe(data => console.log(data), err => console.log);
     this.apiService.createTask(this.Task);
   }
 }

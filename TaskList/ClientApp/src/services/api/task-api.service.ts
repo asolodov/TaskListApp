@@ -16,7 +16,7 @@ export class TaskApiService {
     return this.http.get<ApiResponse<Task[]>>(this.taskUrl).pipe(map(data => data.data));
   }
 
-  createTask(task: Task): Observable<Task> {
-    return this.http.post<Task>(this.taskUrl, task);
+  createTask(task: Task) {
+    this.http.post<Task>(this.taskUrl, task).subscribe();
   }
 }
