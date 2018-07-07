@@ -1,15 +1,15 @@
-<div class="example-container">
+<form [formGroup]="taskForm" class="add-task-form">
   <mat-form-field>
-    <input [(ngModel)]="Task.name" matInput placeholder="Name">
+    <input formControlName ="name" matInput placeholder="Name">
   </mat-form-field>
   <mat-form-field>
-    <textarea [(ngModel)]="Task.description" matInput placeholder="Description"></textarea>
+    <textarea formControlName="description" matInput placeholder="Description"></textarea>
   </mat-form-field>
   <mat-form-field>
-    <input [(ngModel)]="Task.priority" matInput type="number" min="0" max="10" placeholder="Priority">
+    <input formControlName="priority" matInput type="number" min="1" max="9" placeholder="Priority">
   </mat-form-field>
   <mat-form-field>
-    <input [(ngModel)]="Task.timeToComplete" matInput type="datetime-local" placeholder="Time to complete">
+    <input formControlName="timeToComplete" matInput type="datetime-local" placeholder="Time to complete">
   </mat-form-field>
-</div>
-<button mat-raised-button (click)="save()">Save</button>
+</form>
+<button mat-raised-button (click)="save()" [disabled]="!taskForm.valid">Save</button>

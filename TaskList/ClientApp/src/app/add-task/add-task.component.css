@@ -1,12 +1,5 @@
-.example-container {
+.add-task-form {
   display: flex;
   flex-direction: column;
   width: 40%;
-}
-
-  .example-container > * {
-  }
-
-.refresh {
-padding-bottom:10px;
 }
