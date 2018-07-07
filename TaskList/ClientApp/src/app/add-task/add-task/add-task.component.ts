@@ -1,7 +1,6 @@
 import { Component, OnInit} from '@angular/core';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule, ValidatorFn, AbstractControl } from '@angular/forms';
-import { Task, Status } from '../../models/app.models'
-import { TaskApiService } from '../../services/api/task-api.service';
+import { Task, Status, TaskApiService } from '../../core';
 import { retry } from 'rxjs/operators';
 
 @Component({
