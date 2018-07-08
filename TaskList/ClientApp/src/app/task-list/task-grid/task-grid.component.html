@@ -5,8 +5,8 @@
   <dxo-selection mode="single"></dxo-selection>
   <dxi-column dataField="name" caption="Name"></dxi-column>
   <dxi-column dataField="priority" [width]="70" caption="Priority"></dxi-column>
-  <dxi-column dataField="dateAdded" caption="Added"></dxi-column>
-  <dxi-column dataField="dateAdded" caption="Time to complete"></dxi-column>
+  <dxi-column dataField="dateAdded" caption="Added" dataType="date" format="yyyy-MM-dd HH:mm"></dxi-column>
+  <dxi-column dataField="timeToComplete" caption="Time to complete"></dxi-column>
   <dxi-column name="edit" caption="Actions"
               [allowFiltering]="false"
               [allowSorting]="false"
