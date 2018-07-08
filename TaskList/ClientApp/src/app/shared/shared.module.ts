@@ -11,6 +11,7 @@ import {
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { StatusPipe } from './status.pipe';
 
 @NgModule({
   imports: [
@@ -25,7 +26,8 @@ import { HttpClientModule } from '@angular/common/http';
     MatButtonToggleModule
   ],
   declarations: [
-    NavMenuComponent
+    NavMenuComponent,
+    StatusPipe
   ],
   exports: [
     CommonModule,
@@ -36,7 +38,8 @@ import { HttpClientModule } from '@angular/common/http';
     MatInputModule,
     MatSelectModule,
     MatChipsModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    StatusPipe
   ]
 })
 export class SharedModule { }
