@@ -1,3 +1,7 @@
 ::ng-deep #gridContainer {
-  height: 440px;
+  height: 360px;
+}
+
+#gridContainer a{
+  cursor: pointer;
 }

@@ -7,24 +7,19 @@
                 <span class='icon-bar'></span>
                 <span class='icon-bar'></span>
             </button>
-            <a class='navbar-brand' [routerLink]='["/task-list"]'>Task list</a>
+            <a class='navbar-brand' [routerLink]='["/"]'>Task list</a>
         </div>
         <div class='clearfix'></div>
         <div class='navbar-collapse collapse' [ngClass]='{ "in": isExpanded }'>
             <ul class='nav navbar-nav'>
-                <!--<li [routerLinkActive]='["link-active"]' [routerLinkActiveOptions]='{ exact: true }'>
-                    <a [routerLink]='["/"]' (click)='collapse()'>
-                        <span class='glyphicon glyphicon-home'></span> Home
-                    </a>
-                </li>-->
               <li [routerLinkActive]='["link-active"]'>
                     <a [routerLink]='["/add-task"]' (click)='collapse()'>
-                        <span class='glyphicon glyphicon-th-list'></span> Add Task
+                        <span class='glyphicon glyphicon-th-list'></span> Add new task
                     </a>
                 </li>
                 <li [routerLinkActive]='["link-active"]'>
                     <a [routerLink]='["/task-list"]' (click)='collapse()'>
-                        <span class='glyphicon glyphicon-th-list'></span> Task List
+                        <span class='glyphicon glyphicon-th-list'></span> Task list
                     </a>
                 </li>
             </ul>

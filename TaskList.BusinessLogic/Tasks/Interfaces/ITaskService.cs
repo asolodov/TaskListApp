@@ -8,6 +8,11 @@ namespace TaskList.BusinessLogic.Tasks.Interfaces
     public interface ITaskService
     {
         IEnumerable<Task> GetTasks();
+
         void CreateTask(Task task);
+
+        void UpdateTask(Task task);
+
+        void DeleteTask(int id);
     }
 }

@@ -1,6 +1,7 @@
+<h2>Add new task</h2>
 <form [formGroup]="taskForm" class="add-task-form">
   <mat-form-field>
-    <input formControlName ="name" matInput placeholder="Name">
+    <input formControlName ="name" matInput placeholder="Name" autocomplete="off">
   </mat-form-field>
   <mat-form-field>
     <textarea formControlName="description" matInput placeholder="Description"></textarea>
@@ -9,7 +10,8 @@
     <input formControlName="priority" matInput type="number" min="1" max="9" placeholder="Priority">
   </mat-form-field>
   <mat-form-field>
-    <input formControlName="timeToComplete" matInput type="datetime-local" placeholder="Time to complete">
+    <input formControlName="timeToComplete" matInput [owlDateTime]="dt1" [owlDateTimeTrigger]="dt1" placeholder="Time to complete">
+    <owl-date-time #dt1></owl-date-time>
   </mat-form-field>
 </form>
 <button mat-raised-button (click)="save()" [disabled]="!taskForm.valid">Save</button>

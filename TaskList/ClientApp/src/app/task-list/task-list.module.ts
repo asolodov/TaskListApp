@@ -5,6 +5,8 @@ import { TaskDetailsComponent } from './task-details/task-details.component';
 import { DxDataGridModule } from 'devextreme-angular';
 import { SharedModule } from '../shared/shared.module';
 import { TaskListRoutingModule } from './task-list-routing.module';
+import { TaskDetailsResolver } from './task-details-resolver.service';
+import { TaskRoutingService } from './task-routing.service';
 
 
 @NgModule({
@@ -19,6 +21,8 @@ import { TaskListRoutingModule } from './task-list-routing.module';
     TaskDetailsComponent
   ],
   providers: [
+    TaskDetailsResolver,
+    TaskRoutingService
   ]
 })
 export class TaskListModule { }

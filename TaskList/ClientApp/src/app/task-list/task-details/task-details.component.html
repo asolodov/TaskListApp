@@ -1,17 +1,25 @@
-<div *ngIf="task!= null">
-  <div>
-    Name: {{task.name}}
-  </div>
-  <div>
-    Description: {{task.description}}
-  </div>
-  <div>
-    Status: {{task.status}}
-  </div>
-  <div>
-    Priority: {{task.priority}}
-  </div>
-  <div>
-    Added: {{task.dateAdded}}
+<div *ngIf="task!= null" class="task-details">
+  <div class="task-details-content">
+    <span class="task-details-title">Task details</span>
+    <div class="details-row">
+      <div class="row-label">Name:</div>
+      <div class="row-content">{{task.name}}</div>
+    </div>
+    <div class="details-row-extended">
+      <div class="row-label">Description:</div>
+      <div class="row-content"> {{task.description}}</div>
+    </div>
+    <div class="details-row">
+      <div class="row-label"> Status:</div>
+      <div class="row-content"> {{task.status}}</div>
+    </div>
+    <div class="details-row">
+      <div class="row-label">Priority:</div>
+      <div class="row-content">{{task.priority}}</div>
+    </div>
+    <div class="details-row">
+      <div class="row-label">Added:</div>
+      <div class="row-content">{{task.dateAdded}}</div>
+    </div>
   </div>
 </div>

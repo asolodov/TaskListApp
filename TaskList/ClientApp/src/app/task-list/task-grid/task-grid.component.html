@@ -1,12 +1,22 @@
 <dx-data-grid id="gridContainer"
               [dataSource]="tasks"
-              (onSelectionChanged)="onRowSelected($event)">
+              (onSelectionChanged)="onRowSelected($event)"
+              [selectedRowKeys]="[selectedTaskId]">
   <dxo-selection mode="single"></dxo-selection>
   <dxi-column dataField="name" caption="Name"></dxi-column>
   <dxi-column dataField="priority" [width]="70" caption="Priority"></dxi-column>
   <dxi-column dataField="dateAdded" caption="Added"></dxi-column>
   <dxi-column dataField="dateAdded" caption="Time to complete"></dxi-column>
   <dxi-column dataField="dateAdded" caption="Actions"></dxi-column>
+  <dxi-column name="edit"
+              [allowFiltering]="false"
+              [allowSorting]="false"
+              cellTemplate="cellTemplate">
+    <div *dxTemplate="let data of 'cellTemplate'">
+      <a *ngIf="data.data.status == Status.Active" (click)="completeTask(data.data)">Complete</a>
+      <a *ngIf="data.data.status == Status.Completed" (click)="removeTask(data.data)">Remove</a>
+    </div>
+  </dxi-column>
   <dxo-load-panel [enabled]="false"></dxo-load-panel>
   <dxo-scrolling mode="infinite"></dxo-scrolling>
   <dxo-sorting mode="none"></dxo-sorting>

@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { Event } from '@angular/router';
-import { Task } from '../../core';
+import { Task, Status } from '../../core';
 
 @Component({
   selector: 'app-task-grid',
@@ -13,8 +13,17 @@ export class TaskGridComponent {
   @Input()
   tasks: Task[];
 
+  @Input()
+  selectedTaskId?: number;
+
   @Output()
-  onSelectionChange: EventEmitter<Task> = new EventEmitter();
+  onSelectionChanged: EventEmitter<Task> = new EventEmitter();
+  @Output()
+  onTaskCompleted: EventEmitter<Task> = new EventEmitter();
+  @Output()
+  onTaskDeleted: EventEmitter<Task> = new EventEmitter();
+
+  Status = Status;
 
   dataSource: any;
 
@@ -29,6 +38,14 @@ export class TaskGridComponent {
   }
 
   onRowSelected(event) {
-    this.onSelectionChange.emit(event.currentSelectedRowKeys[0]);
+    this.onSelectionChanged.emit(event.currentSelectedRowKeys[0]);
+  }
+
+  public completeTask(task: Task) {
+    this.onTaskCompleted.emit(task);
+  }
+
+  public removeTask(task: Task) {
+    this.onTaskDeleted.emit(task);
   }
 }

@@ -32,5 +32,26 @@ namespace TaskList.BusinessLogic.Tasks
             _taskRepository.SaveChanges();
         }
 
+        public void UpdateTask(Task task)
+        {
+            if (task == null)
+                throw new ArgumentNullException(nameof(task));
+
+            _taskRepository.Update(task);
+            _taskRepository.SaveChanges();
+        }
+
+        public void DeleteTask(int id)
+        {
+            if (id <= 0)
+                throw new ArgumentOutOfRangeException(nameof(id));
+
+            var task = _taskRepository.GetById(id);
+            if (task != null)
+            {
+                _taskRepository.Delete(task);
+                _taskRepository.SaveChanges();
+            }
+        }
     }
 }

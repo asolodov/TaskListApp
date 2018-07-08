@@ -1,9 +1,10 @@
 export enum Status {
-  Actvie,
-  Completed
+  Active = 0,
+  Completed = 1
 }
 
 export interface Task {
+  id: number,
   name: string,
   desctription?: string,
   status: Status,

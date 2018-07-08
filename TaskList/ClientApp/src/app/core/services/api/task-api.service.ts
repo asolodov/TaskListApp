@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
-import { Task, ApiResponse } from '../../models/app.models';
+import { Task, ApiResponse, Status } from '../../models/app.models';
 import { HttpClient, HttpHeaders, HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -9,7 +9,7 @@ import { map } from 'rxjs/operators';
 })
 export class TaskApiService {
 
-  constructor(@Inject('TASK_URL') private taskUrl, private http: HttpClient) {
+  constructor(@Inject('TASK_URL') private taskUrl: string, private http: HttpClient) {
   }
 
   getTasks(): Observable<Task[]> {
@@ -17,6 +17,19 @@ export class TaskApiService {
   }
 
   createTask(task: Task) {
-    this.http.post<Task>(this.taskUrl, task).subscribe();
+    return this.http.post<Task>(this.taskUrl, task).subscribe();
+  }
+
+  updateTask(task: Task) {
+    return this.http.put(`${this.taskUrl}/${task.id}`, task);
+  }
+
+  completeTask(task: Task) {
+    let updatedTask = Object.assign(task, { status: Status.Completed });
+    return this.http.put(`${this.taskUrl}/${task.id}`, updatedTask);
+  }
+
+  deleteTask(task: Task) {
+    return this.http.delete(`${this.taskUrl}/${task.id}`);
   }
 }
