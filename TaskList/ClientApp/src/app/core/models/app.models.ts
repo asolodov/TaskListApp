@@ -3,6 +3,12 @@ export enum Status {
   Completed = 1
 }
 
+export enum TaskListFilter {
+  All = 0,
+  Active = 1,
+  Completed = 2
+}
+
 export interface Task {
   id: number,
   name: string,

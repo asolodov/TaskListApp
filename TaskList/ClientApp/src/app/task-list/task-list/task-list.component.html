@@ -1,9 +1,9 @@
 <h2>Task list</h2>
 <div class="list-header clearfix">
-  <mat-button-toggle-group name="statusFilter" aria-label="Status filter" value="all">
-    <mat-button-toggle value="all">All</mat-button-toggle>
-    <mat-button-toggle value="active">Active</mat-button-toggle>
-    <mat-button-toggle value="completed">Completed</mat-button-toggle>
+  <mat-button-toggle-group name="statusFilter" aria-label="Status filter" [value]="taskFilter" (change)="onFilterChange($event.value)">
+    <mat-button-toggle [value]="TaskListFilter.All">All</mat-button-toggle>
+    <mat-button-toggle [value]="TaskListFilter.Active">Active</mat-button-toggle>
+    <mat-button-toggle [value]="TaskListFilter.Completed">Completed</mat-button-toggle>
   </mat-button-toggle-group>
   <button mat-raised-button (click)="refresh()" class="btn-refresh">Refresh</button>
 </div>
@@ -13,7 +13,8 @@
                    (onSelectionChanged)="onTaskSelected($event)"
                    (onTaskCompleted)="onTaskCompleted($event)"
                    (onTaskDeleted)="onTaskDeleted($event)"
-                   [selectedTaskId]="selectedTaskId"></app-task-grid>
+                   [selectedTaskId]="selectedTaskId"
+                   [filter]="taskFilter"></app-task-grid>
   </div>
   <div class="task-details">
     <app-task-details [task]="taskDetails"></app-task-details>

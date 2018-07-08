@@ -1,20 +1,42 @@
-import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input, ViewChild } from '@angular/core';
 import { Event } from '@angular/router';
-import { Task, Status } from '../../core';
+import { Task, Status, TaskListFilter } from '../../core';
+import {
+  DxDataGridComponent,
+  DxDataGridModule,
+  DxSelectBoxModule
+} from 'devextreme-angular';
 
 @Component({
   selector: 'app-task-grid',
   templateUrl: './task-grid.component.html',
   styleUrls: ['./task-grid.component.css']
-  //providers: [Service]
 })
 export class TaskGridComponent {
+  Status = Status;
 
   @Input()
   tasks: Task[];
+  @Input()
+  selectedTaskId: number;
 
   @Input()
-  selectedTaskId?: number;
+  set filter(filter: TaskListFilter) {
+
+    if (this.dataGrid && this.dataGrid.instance) {
+      switch (filter) {
+        case TaskListFilter.All:
+          this.dataGrid.instance.clearFilter();
+          break;
+        case TaskListFilter.Active:
+          this.dataGrid.instance.filter(["status", "=", Status.Active]);
+          break;
+        case TaskListFilter.Completed:
+          this.dataGrid.instance.filter(["status", "=", Status.Completed]);
+          break;
+      }
+    }
+  }
 
   @Output()
   onSelectionChanged: EventEmitter<Task> = new EventEmitter();
@@ -23,18 +45,9 @@ export class TaskGridComponent {
   @Output()
   onTaskDeleted: EventEmitter<Task> = new EventEmitter();
 
-  Status = Status;
+  @ViewChild(DxDataGridComponent) dataGrid: DxDataGridComponent;
 
-  dataSource: any;
-
-  constructor(/*service: Service*/) {
-    //this.dataSource = {
-    //  store: service.generateData(100000)
-    //};
-  }
-
-  customizeColumns(columns) {
-    columns[0].width = 70;
+  constructor() {
   }
 
   onRowSelected(event) {
@@ -47,5 +60,9 @@ export class TaskGridComponent {
 
   public removeTask(task: Task) {
     this.onTaskDeleted.emit(task);
+  }
+
+  public refreshGrid() {
+    this.dataGrid.instance.refresh();
   }
 }
