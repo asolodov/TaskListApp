@@ -43,7 +43,9 @@ export class TaskListComponent implements OnInit {
   }
 
   refresh() {
-    this._uploadTasks();
+    this._uploadTasks().add(() => {
+      setTimeout(() => this.taskGrid.refreshGrid());
+    });
   }
 
   onTaskCompleted(task: Task) {

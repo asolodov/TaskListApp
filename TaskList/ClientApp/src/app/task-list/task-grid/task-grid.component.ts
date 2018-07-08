@@ -22,21 +22,13 @@ export class TaskGridComponent {
 
   @Input()
   set filter(filter: TaskListFilter) {
-
-    if (this.dataGrid && this.dataGrid.instance) {
-      switch (filter) {
-        case TaskListFilter.All:
-          this.dataGrid.instance.clearFilter();
-          break;
-        case TaskListFilter.Active:
-          this.dataGrid.instance.filter(["status", "=", Status.Active]);
-          break;
-        case TaskListFilter.Completed:
-          this.dataGrid.instance.filter(["status", "=", Status.Completed]);
-          break;
-      }
-    }
+    this._filter = filter;
+    this._setupFilter();
   }
+  get filter() {
+    return this._filter;
+  }
+  private _filter: TaskListFilter;
 
   @Output()
   onSelectionChanged: EventEmitter<Task> = new EventEmitter();
@@ -64,5 +56,22 @@ export class TaskGridComponent {
 
   public refreshGrid() {
     this.dataGrid.instance.refresh();
+    this._setupFilter()
+  }
+
+  private _setupFilter() {
+    if (this.dataGrid && this.dataGrid.instance) {
+      switch (this.filter) {
+        case TaskListFilter.All:
+          this.dataGrid.instance.clearFilter();
+          break;
+        case TaskListFilter.Active:
+          this.dataGrid.instance.filter(["status", "=", Status.Active]);
+          break;
+        case TaskListFilter.Completed:
+          this.dataGrid.instance.filter(["status", "=", Status.Completed]);
+          break;
+      }
+    }
   }
 }
