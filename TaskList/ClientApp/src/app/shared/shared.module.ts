@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { StatusPipe } from './status.pipe';
+import { DateDiffDirective } from './date-diff/date-diff.directive';
 
 @NgModule({
   imports: [
@@ -27,7 +28,8 @@ import { StatusPipe } from './status.pipe';
   ],
   declarations: [
     NavMenuComponent,
-    StatusPipe
+    StatusPipe,
+    DateDiffDirective
   ],
   exports: [
     CommonModule,
@@ -39,7 +41,8 @@ import { StatusPipe } from './status.pipe';
     MatSelectModule,
     MatChipsModule,
     MatButtonToggleModule,
-    StatusPipe
+    StatusPipe,
+    DateDiffDirective
   ]
 })
 export class SharedModule { }

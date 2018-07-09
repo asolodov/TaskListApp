@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input, ViewChild, OnDestroy } from '@angular/core';
 import { Event } from '@angular/router';
 import { Task, Status, TaskListFilter } from '../../core';
 import {
@@ -12,7 +12,8 @@ import {
   templateUrl: './task-grid.component.html',
   styleUrls: ['./task-grid.component.css']
 })
-export class TaskGridComponent {
+export class TaskGridComponent implements OnInit, OnDestroy {
+  private readonly TIMER_INTERVAL: number = 1000;
   Status = Status;
 
   @Input()
@@ -39,6 +40,10 @@ export class TaskGridComponent {
 
   @ViewChild(DxDataGridComponent) dataGrid: DxDataGridComponent;
 
+  currentDate: Date = new Date();
+
+  private _intervalId: NodeJS.Timer;
+
   constructor() {
   }
 
@@ -57,6 +62,16 @@ export class TaskGridComponent {
   public refreshGrid() {
     this.dataGrid.instance.refresh();
     this._setupFilter()
+  }
+
+  ngOnInit() {
+    this._intervalId = setInterval(() => {
+      this.currentDate = new Date();
+    }, this.TIMER_INTERVAL);
+  }
+
+  ngOnDestroy() {
+    clearInterval(this._intervalId);
   }
 
   private _setupFilter() {
