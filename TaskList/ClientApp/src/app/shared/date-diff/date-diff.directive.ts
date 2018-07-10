@@ -41,7 +41,7 @@ export class DateDiffDirective implements OnInit {
     const minutes = Math.floor(delta / 60) % 60;
     delta -= minutes * 60;
 
-    const seconds = Math.round(delta % 60;
+    const seconds = Math.round(delta % 60);
 
     return this._format(weeks, days, hours, minutes, seconds);
   }
