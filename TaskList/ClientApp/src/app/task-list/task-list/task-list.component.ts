@@ -61,7 +61,7 @@ export class TaskListComponent implements OnInit {
   onTaskDeleted(task: Task) {
     this.apiService.deleteTask(task).subscribe((data) => {
       this._removeTask(task);
-      this.notificationService.showSuccessNotification("Task has been deleted", 10000);
+      this.notificationService.showSuccessNotification("Task has been deleted");
     }, err => this.notificationService.showErrorNotification(err));
   }
 

@@ -13,7 +13,8 @@
                 [allowSorting]="false"
                 cellTemplate="ttcTemplate">
       <div *dxTemplate="let ttc of 'ttcTemplate'">
-        <span appDateDiff [appDateFrom]="currentDate" [appDateTo]="ttc.data.timeToComplete"></span>
+        <span *ngIf="ttc.data.status == Status.Active" appDateDiff [appDateFrom]="currentDate" [appDateTo]="ttc.data.timeToComplete"></span>
+        <span *ngIf="ttc.data.status == Status.Completed">Completed</span>
       </div>
     </dxi-column>
     <dxi-column name="edit" caption="Actions"
