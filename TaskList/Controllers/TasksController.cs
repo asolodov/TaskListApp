@@ -22,19 +22,6 @@ namespace TaskList.Controllers
         [HttpGet]
         public DataResponseModel<IEnumerable<Task>> Get()
         {
-            //var l = new List<Task>();
-            //for (int i = 0; i < 200000; i++)
-            //{
-            //    l.Add(new Task()
-            //    {
-            //        Id = i,
-            //        Name = i.ToString(),
-            //        Priority = i,
-            //        Status = Status.Active,
-            //        DateAdded = DateTime.Now,
-            //        TimeToComplete = DateTime.Now
-            //    });
-            //}
             var tasks = _taskService.GetTasks().Select(t => Mapper.Map<Task>(t));
             return new DataResponseModel<IEnumerable<Task>>(tasks);
         }
