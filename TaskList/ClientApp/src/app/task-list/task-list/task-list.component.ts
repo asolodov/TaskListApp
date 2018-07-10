@@ -1,7 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Task, TaskApiService, Status, TaskListFilter } from '../../core';
-import { debug } from 'util';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { TaskRoutingService } from '../task-routing.service';
@@ -18,7 +17,6 @@ export class TaskListComponent implements OnInit {
 
   taskList: Task[];
   taskDetails: Task;
-  selectedTaskId: number;
   taskFilter: TaskListFilter = TaskListFilter.All;
 
   @ViewChild(TaskGridComponent) taskGrid: TaskGridComponent;
@@ -32,9 +30,9 @@ export class TaskListComponent implements OnInit {
 
   ngOnInit() {
     this._uploadTasks().add(() => {
-      if (this.activatedRoute.snapshot.data.taskId) {
-        this.taskDetails = this.taskList.find(t => t.id == this.activatedRoute.snapshot.data.taskId);
-        this.selectedTaskId = this.taskDetails.id;
+      let routeId = this.activatedRoute.snapshot.params['id'];
+      if (routeId) {
+        this.taskDetails = this.taskList.find(t => t.id == routeId);
       }
     });
   }

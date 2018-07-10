@@ -19,8 +19,6 @@ export class TaskGridComponent implements OnInit, OnDestroy {
   @Input()
   tasks: Task[];
   @Input()
-  selectedTaskId: number;
-  @Input()
   height: string;
 
   @Input()

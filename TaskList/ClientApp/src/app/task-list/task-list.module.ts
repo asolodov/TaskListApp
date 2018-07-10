@@ -5,7 +5,6 @@ import { TaskDetailsComponent } from './task-details/task-details.component';
 import { DxDataGridModule } from 'devextreme-angular';
 import { SharedModule } from '../shared/shared.module';
 import { TaskListRoutingModule } from './task-list-routing.module';
-import { TaskDetailsResolver } from './task-details-resolver.service';
 import { TaskRoutingService } from './task-routing.service';
 import { UserNotificationService } from '../shared/user-notification/user-notification.service';
 
@@ -22,7 +21,6 @@ import { UserNotificationService } from '../shared/user-notification/user-notifi
     TaskDetailsComponent
   ],
   providers: [
-    TaskDetailsResolver,
     TaskRoutingService,
     UserNotificationService
   ]

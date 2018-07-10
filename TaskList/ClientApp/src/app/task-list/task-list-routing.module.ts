@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { TaskListComponent } from './task-list/task-list.component';
-import { TaskDetailsResolver } from './task-details-resolver.service';
 
 const routes: Routes = [
   {
@@ -10,10 +9,7 @@ const routes: Routes = [
   },
   {
     path: ':id',
-    component: TaskListComponent,
-    resolve: {
-      taskId: TaskDetailsResolver
-    }
+    component: TaskListComponent
   }
 ];
 
