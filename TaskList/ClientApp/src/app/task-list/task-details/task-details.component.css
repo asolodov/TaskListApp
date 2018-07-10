@@ -1,11 +1,14 @@
 .task-details {
   position: relative;
+  height: 100%;
+  min-height: 200px;
+  margin-bottom: 10px;
 }
 
 .task-details-content {
   border: 2px solid black;
-  margin-top: 15px;
   padding: 10px;
+  height: 100%;
 }
 
 .task-details-title {
@@ -19,6 +22,8 @@
 .details-row {
   padding: 5px 0;
   display: flex;
+  height: 15%;
+  min-height: 30px;
 }
 
 .row-label {
@@ -35,7 +40,8 @@
 .details-row-extended {
   padding: 5px 0;
   display: flex;
-  height: 70px;
+  height: 40%;
+  min-height: 70px;
 }
 
   .details-row-extended .row-content {

@@ -20,6 +20,8 @@ export class TaskGridComponent implements OnInit, OnDestroy {
   tasks: Task[];
   @Input()
   selectedTaskId: number;
+  @Input()
+  height: string;
 
   @Input()
   set filter(filter: TaskListFilter) {
@@ -42,7 +44,7 @@ export class TaskGridComponent implements OnInit, OnDestroy {
 
   currentDate: Date = new Date();
 
-  private _intervalId: NodeJS.Timer;
+  private _intervalId: any;
 
   constructor() {
   }

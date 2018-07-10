@@ -14,7 +14,8 @@
                    (onTaskCompleted)="onTaskCompleted($event)"
                    (onTaskDeleted)="onTaskDeleted($event)"
                    [selectedTaskId]="selectedTaskId"
-                   [filter]="taskFilter"></app-task-grid>
+                   [filter]="taskFilter"
+                   [height]="'50vh'"></app-task-grid>
   </div>
   <div class="task-details">
     <app-task-details [task]="taskDetails"></app-task-details>

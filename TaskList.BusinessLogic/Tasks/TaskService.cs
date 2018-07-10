@@ -26,7 +26,7 @@ namespace TaskList.BusinessLogic.Tasks
             if (task == null)
                 throw new ArgumentNullException(nameof(task));
 
-            task.DateAdded = DateTime.Now;
+            task.DateAdded = DateTime.Now.ToUniversalTime();
 
             _taskRepository.Add(task);
             _taskRepository.SaveChanges();
