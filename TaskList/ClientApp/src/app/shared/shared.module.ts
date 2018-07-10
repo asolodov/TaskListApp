@@ -6,14 +6,16 @@ import {
   MatInputModule,
   MatSelectModule,
   MatChipsModule,
-  MatButtonToggleModule
+  MatButtonToggleModule,
+  MatIconModule,
+  MatSnackBarModule
 } from '@angular/material';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { StatusPipe } from './status.pipe';
 import { DateDiffDirective } from './date-diff/date-diff.directive';
-import { MatIconModule } from '@angular/material/icon'
+import { SnackBarComponent } from './snack-bar/snack-bar.component';
 
 @NgModule({
   imports: [
@@ -26,12 +28,14 @@ import { MatIconModule } from '@angular/material/icon'
     MatSelectModule,
     MatChipsModule,
     MatButtonToggleModule,
-    MatIconModule
+    MatIconModule,
+    MatSnackBarModule
   ],
   declarations: [
     NavMenuComponent,
     StatusPipe,
-    DateDiffDirective
+    DateDiffDirective,
+    SnackBarComponent
   ],
   exports: [
     CommonModule,
@@ -44,8 +48,12 @@ import { MatIconModule } from '@angular/material/icon'
     MatChipsModule,
     MatButtonToggleModule,
     MatIconModule,
+    MatSnackBarModule,
     StatusPipe,
     DateDiffDirective
+  ],
+  entryComponents: [
+    SnackBarComponent
   ]
 })
 export class SharedModule { }

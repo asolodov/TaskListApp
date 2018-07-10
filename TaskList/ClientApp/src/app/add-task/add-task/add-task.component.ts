@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule, ValidatorFn, AbstractControl } from '@angular/forms';
 import { Task, Status, TaskApiService } from '../../core';
+import { MatSnackBar } from '@angular/material';
+import { UserNotificationService } from '../../shared/user-notification/user-notification.service';
 
 @Component({
   selector: 'app-add-task',
@@ -12,7 +14,7 @@ export class AddTaskComponent implements OnInit {
   taskForm: FormGroup;
   minDate: Date = new Date();
 
-  constructor(private apiService: TaskApiService) {
+  constructor(private apiService: TaskApiService, private notificationService: UserNotificationService) {
   }
 
   ngOnInit() {
@@ -51,7 +53,10 @@ export class AddTaskComponent implements OnInit {
 
   save() {
     if (this.taskForm.valid) {
-      this.apiService.createTask(this.taskForm.value).subscribe();
+      this.apiService.createTask(this.taskForm.value).subscribe(() => {
+        this.notificationService.showSuccessNotification("Task has been successfully created");
+        this.taskForm.reset();
+      }, err => this.notificationService.showErrorNotification(err));
     }
   }
 }

@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { TaskRoutingService } from '../task-routing.service';
 import { TaskGridComponent } from '../task-grid/task-grid.component';
+import { UserNotificationService } from '../../shared/user-notification/user-notification.service';
 
 @Component({
   selector: 'app-task-list',
@@ -25,7 +26,8 @@ export class TaskListComponent implements OnInit {
   constructor(
     private apiService: TaskApiService,
     private taskRoutingService: TaskRoutingService,
-    private activatedRoute: ActivatedRoute) {
+    private activatedRoute: ActivatedRoute,
+    private notificationService: UserNotificationService) {
   }
 
   ngOnInit() {
@@ -52,13 +54,15 @@ export class TaskListComponent implements OnInit {
     this.apiService.completeTask(task).subscribe((data) => {
       task.status = Status.Completed;
       this.taskGrid.refreshGrid();
-    });
+      this.notificationService.showSuccessNotification("Task has been completed");
+    }, err => this.notificationService.showErrorNotification(err));
   }
 
   onTaskDeleted(task: Task) {
     this.apiService.deleteTask(task).subscribe((data) => {
       this._removeTask(task);
-    });
+      this.notificationService.showSuccessNotification("Task has been deleted", 10000);
+    }, err => this.notificationService.showErrorNotification(err));
   }
 
   onFilterChange(value: TaskListFilter) {
