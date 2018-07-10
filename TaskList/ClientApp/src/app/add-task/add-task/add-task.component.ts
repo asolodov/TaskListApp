@@ -1,7 +1,6 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule, ValidatorFn, AbstractControl } from '@angular/forms';
 import { Task, Status, TaskApiService } from '../../core';
-import { retry } from 'rxjs/operators';
 
 @Component({
   selector: 'app-add-task',
@@ -10,17 +9,13 @@ import { retry } from 'rxjs/operators';
 })
 export class AddTaskComponent implements OnInit {
 
-  public taskForm: FormGroup;
+  taskForm: FormGroup;
+  minDate: Date = new Date();
 
   constructor(private apiService: TaskApiService) {
   }
 
   ngOnInit() {
-    //let ttc = new Date();
-    //ttc.setDate(ttc.getDate() + 1);
-    //let ttcVal = `${ttc.toJSON().slice(0, 10)}T00:00:00`;
-    //let ttcVal = this.getDateTimeFormat(1);
-
     this.taskForm = new FormGroup({
       name: new FormControl('', [
         Validators.required
@@ -28,7 +23,7 @@ export class AddTaskComponent implements OnInit {
       description: new FormControl(),
       priority: new FormControl(1, [
         Validators.required,
-        Validators.pattern("[1-9]")
+        Validators.pattern("^[1-9][0-9]?$|^100$")
       ]),
       timeToComplete: new FormControl('', [
         Validators.required,
@@ -44,10 +39,15 @@ export class AddTaskComponent implements OnInit {
     };
   }
 
-  //private getDateTimeFormat(addDays: number): string {
-  //  let ttc = moment().add(1, 'days');
-  //  return ttc.toJSON().slice(0, 19);
-  //}
+  getError = (ctrl: FormControl, name: string, message: string) => ctrl.hasError(name) ? message : null;
+  getRequiredError = (ctrl: FormControl) => this.getError(ctrl, 'required', 'This is required field');
+  getPriorityError = (ctrl: FormControl) =>
+    this.getRequiredError(ctrl)
+    || this.getError(ctrl, 'pattern', 'Value should be in range from 1 to 100 ');
+  getTimeToCompleteError = (ctrl: FormControl) =>
+    this.getError(ctrl, 'owlDateTimeParse', 'Value should has date format')
+    || this.getRequiredError(ctrl)
+    || this.getError(ctrl, 'timeToComplete', 'Value should be a date in future');
 
   save() {
     if (this.taskForm.valid) {

@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { StatusPipe } from './status.pipe';
 import { DateDiffDirective } from './date-diff/date-diff.directive';
+import { MatIconModule } from '@angular/material/icon'
 
 @NgModule({
   imports: [
@@ -24,7 +25,8 @@ import { DateDiffDirective } from './date-diff/date-diff.directive';
     MatInputModule,
     MatSelectModule,
     MatChipsModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatIconModule
   ],
   declarations: [
     NavMenuComponent,
@@ -41,6 +43,7 @@ import { DateDiffDirective } from './date-diff/date-diff.directive';
     MatSelectModule,
     MatChipsModule,
     MatButtonToggleModule,
+    MatIconModule,
     StatusPipe,
     DateDiffDirective
   ]

@@ -1,17 +1,21 @@
 <h2>Add new task</h2>
 <form [formGroup]="taskForm" class="add-task-form">
   <mat-form-field>
-    <input formControlName ="name" matInput placeholder="Name" autocomplete="off">
+    <input formControlName="name" matInput placeholder="Name" autocomplete="off">
+    <mat-error *ngIf="taskForm.controls.name.invalid">{{getRequiredError(taskForm.controls.name)}}</mat-error>
   </mat-form-field>
   <mat-form-field>
     <textarea formControlName="description" matInput placeholder="Description"></textarea>
   </mat-form-field>
   <mat-form-field>
-    <input formControlName="priority" matInput type="number" min="1" max="9" placeholder="Priority">
+    <input formControlName="priority" matInput type="number" min="1" max="100" placeholder="Priority">
+    <mat-error *ngIf="taskForm.controls.priority.invalid">{{getPriorityError(taskForm.controls.priority)}}</mat-error>
   </mat-form-field>
   <mat-form-field>
-    <input formControlName="timeToComplete" matInput [owlDateTime]="dt1" [owlDateTimeTrigger]="dt1" placeholder="Time to complete">
-    <owl-date-time #dt1></owl-date-time>
+    <input formControlName="timeToComplete" matInput [owlDateTime]="ttcPicker" placeholder="Time to complete" [min]="minDate" autocomplete="off">
+    <mat-icon matSuffix [owlDateTimeTrigger]="ttcPicker">event</mat-icon>
+    <owl-date-time #ttcPicker></owl-date-time>
+    <mat-error *ngIf="taskForm.controls.timeToComplete.invalid">{{getTimeToCompleteError(taskForm.controls.timeToComplete)}}</mat-error>
   </mat-form-field>
 </form>
 <button mat-raised-button (click)="save()" [disabled]="!taskForm.valid">Save</button>
