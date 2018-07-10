@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TaskList.BusinessLogic.Tasks.Exceptions;
 using TaskList.BusinessLogic.Tasks.Interfaces;
 using TaskList.BusinessLogic.Tasks.Models;
 
@@ -51,6 +52,10 @@ namespace TaskList.BusinessLogic.Tasks
             {
                 _taskRepository.Delete(task);
                 _taskRepository.SaveChanges();
+            }
+            else
+            {
+                throw new TaskServiceException($"Task with id {id} is not found");
             }
         }
     }

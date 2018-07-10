@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TaskList.BusinessLogic.Tasks.Interfaces;
 using TaskList.DataContracts;
+using TaskList.DataContracts.Response;
 
 namespace TaskList.Controllers
 {
@@ -19,7 +20,7 @@ namespace TaskList.Controllers
         }
 
         [HttpGet]
-        public Response<IEnumerable<Task>> Get()
+        public DataResponseModel<IEnumerable<Task>> Get()
         {
             //var l = new List<Task>();
             //for (int i = 0; i < 200000; i++)
@@ -35,36 +36,34 @@ namespace TaskList.Controllers
             //    });
             //}
             var tasks = _taskService.GetTasks().Select(t => Mapper.Map<Task>(t));
-            return new Response<IEnumerable<Task>>(tasks);
+            return new DataResponseModel<IEnumerable<Task>>(tasks);
         }
 
         [HttpPost]
-        public void Post([FromBody] Task task)
+        public ActionResult Post([FromBody] Task task)
         {
-            if (ModelState.IsValid)
-            {
-                var blTask = Mapper.Map<BusinessLogic.Tasks.Models.Task>(task);
-                _taskService.CreateTask(blTask);
-            }
+            var blTask = Mapper.Map<BusinessLogic.Tasks.Models.Task>(task);
+            _taskService.CreateTask(blTask);
+            return Ok();
         }
 
         [HttpPut]
         [Route("{id:int}")]
-        public void Put(int id, [FromBody] Task task)
+        public ActionResult Put(int id, [FromBody] Task task)
         {
-            if (ModelState.IsValid)
-            {
-                var blTask = Mapper.Map<BusinessLogic.Tasks.Models.Task>(task);
-                blTask.Id = id;
-                _taskService.UpdateTask(blTask);
-            }
+            var blTask = Mapper.Map<BusinessLogic.Tasks.Models.Task>(task);
+            blTask.Id = id;
+            _taskService.UpdateTask(blTask);
+            return Ok();
         }
 
         [HttpDelete]
         [Route("{id:int}")]
-        public void Delete(int id)
+        public ActionResult Delete(int id)
         {
             _taskService.DeleteTask(id);
+            return Ok();
         }
+
     }
 }

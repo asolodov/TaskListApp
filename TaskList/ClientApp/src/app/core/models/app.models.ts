@@ -22,7 +22,7 @@ export interface Task {
 
 export interface ApiResponse<T> {
   data: T,
-  error: Error
+  errors: Error[]
 }
 
 export interface Error {

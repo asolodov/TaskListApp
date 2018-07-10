@@ -51,7 +51,7 @@ export class AddTaskComponent implements OnInit {
 
   save() {
     if (this.taskForm.valid) {
-      this.apiService.createTask(this.taskForm.value);
+      this.apiService.createTask(this.taskForm.value).subscribe();
     }
   }
 }
