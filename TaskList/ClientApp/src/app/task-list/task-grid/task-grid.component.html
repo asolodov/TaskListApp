@@ -2,7 +2,6 @@
   <dx-data-grid id="gridContainer"
                 [dataSource]="tasks"
                 (onSelectionChanged)="onRowSelected($event)"
-                [selectedRowKeys]="[selectedTaskId]"
                 [height]="height">
     <dxo-selection mode="single"></dxo-selection>
     <dxi-column dataField="name" caption="Name"></dxi-column>
