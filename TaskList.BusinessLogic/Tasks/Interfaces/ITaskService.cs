@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using TaskList.BusinessLogic.Tasks.Models;
 
 namespace TaskList.BusinessLogic.Tasks.Interfaces
 {
     public interface ITaskService
     {
-        IEnumerable<Task> GetTasks();
+        Task<IEnumerable<TaskModel>> GetTasks();
 
-        void CreateTask(Task task);
+        Task CreateTask(TaskModel task);
 
-        void UpdateTask(Task task);
+        Task UpdateTask(TaskModel task);
 
-        void DeleteTask(int id);
+        Task DeleteTask(int id);
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using TaskList.BusinessLogic.Tasks.Exceptions;
 using TaskList.BusinessLogic.Tasks.Interfaces;
 using TaskList.BusinessLogic.Tasks.Models;
@@ -11,18 +12,20 @@ namespace TaskList.BusinessLogic.Tasks
     public class TaskService : ITaskService
     {
         private readonly ITaskRepository _taskRepository;
+        private readonly IUserCommunicationService _userCommunicationService;
 
-        public TaskService(ITaskRepository taskRepository)
+        public TaskService(ITaskRepository taskRepository, IUserCommunicationService userCommunicationService)
         {
             _taskRepository = taskRepository;
+            _userCommunicationService = userCommunicationService;
         }
 
-        public IEnumerable<Task> GetTasks()
+        public async Task<IEnumerable<TaskModel>> GetTasks()
         {
-            return _taskRepository.Get().ToList();
+            return await _taskRepository.GetAll();
         }
 
-        public void CreateTask(Task task)
+        public async Task CreateTask(TaskModel task)
         {
             if (task == null)
                 throw new ArgumentNullException(nameof(task));
@@ -30,28 +33,32 @@ namespace TaskList.BusinessLogic.Tasks
             task.DateAdded = DateTime.Now.ToUniversalTime();
 
             _taskRepository.Add(task);
-            _taskRepository.SaveChanges();
+            await _taskRepository.SaveChanges();
+
+            await _userCommunicationService.NotifyTaskAdded(task);
         }
 
-        public void UpdateTask(Task task)
+        public async Task UpdateTask(TaskModel task)
         {
             if (task == null)
                 throw new ArgumentNullException(nameof(task));
 
             _taskRepository.Update(task);
-            _taskRepository.SaveChanges();
+            await _taskRepository.SaveChanges();
+            await _userCommunicationService.NotifyTaskUpdated(task);
         }
 
-        public void DeleteTask(int id)
+        public async Task DeleteTask(int id)
         {
             if (id <= 0)
                 throw new ArgumentOutOfRangeException(nameof(id));
 
-            var task = _taskRepository.GetById(id);
+            var task = await _taskRepository.GetById(id);
             if (task != null)
             {
                 _taskRepository.Delete(task);
-                _taskRepository.SaveChanges();
+                await _taskRepository.SaveChanges();
+                await _userCommunicationService.NotifyTaskDeleted(task);
             }
             else
             {

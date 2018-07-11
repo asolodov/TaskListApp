@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TaskList.BusinessLogic.Tasks.Interfaces;
+using TaskList.BusinessLogic.Tasks.Models;
 using TaskList.DataContracts;
 using TaskList.DataContracts.Response;
 
@@ -20,35 +22,35 @@ namespace TaskList.Controllers
         }
 
         [HttpGet]
-        public DataResponseModel<IEnumerable<Task>> Get()
+        public async Task<DataResponseModel<IEnumerable<TaskResource>>> Get()
         {
-            var tasks = _taskService.GetTasks().Select(t => Mapper.Map<Task>(t));
-            return new DataResponseModel<IEnumerable<Task>>(tasks);
+            var tasks = (await _taskService.GetTasks()).Select(t => Mapper.Map<TaskResource>(t));
+            return new DataResponseModel<IEnumerable<TaskResource>>(tasks);
         }
 
         [HttpPost]
-        public ActionResult Post([FromBody] Task task)
+        public async Task<ActionResult> Post([FromBody] TaskResource task)
         {
-            var blTask = Mapper.Map<BusinessLogic.Tasks.Models.Task>(task);
-            _taskService.CreateTask(blTask);
+            var blTask = Mapper.Map<TaskModel>(task);
+            await _taskService.CreateTask(blTask);
             return Ok();
         }
 
         [HttpPut]
         [Route("{id:int}")]
-        public ActionResult Put(int id, [FromBody] Task task)
+        public async Task<ActionResult> Put(int id, [FromBody] TaskResource task)
         {
-            var blTask = Mapper.Map<BusinessLogic.Tasks.Models.Task>(task);
+            var blTask = Mapper.Map<TaskModel>(task);
             blTask.Id = id;
-            _taskService.UpdateTask(blTask);
+            await _taskService.UpdateTask(blTask);
             return Ok();
         }
 
         [HttpDelete]
         [Route("{id:int}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            _taskService.DeleteTask(id);
+            await _taskService.DeleteTask(id);
             return Ok();
         }
 

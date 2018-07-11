@@ -8,7 +8,7 @@ namespace TaskList.DataAccess
 {
     public class TaskListDbContext : DbContext
     {
-        public DbSet<Task> Tasks { get; set; }
+        public DbSet<TaskModel> Tasks { get; set; }
 
         public TaskListDbContext(DbContextOptions<TaskListDbContext> options)
             : base(options)

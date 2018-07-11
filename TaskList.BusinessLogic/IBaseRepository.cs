@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace TaskList.BusinessLogic
 {
     public interface IBaseRepository<TKey, TEntity> where TEntity : class
     {
-        IQueryable<TEntity> Get();
+        Task<IEnumerable<TEntity>> GetAll();
 
-        TEntity GetById(TKey id);
+        Task<TEntity> GetById(TKey id);
 
         void Add(TEntity entity);
 
@@ -17,6 +18,6 @@ namespace TaskList.BusinessLogic
 
         void Delete(TEntity entity);
 
-        void SaveChanges();
+        Task SaveChanges();
     }
 }

@@ -2,7 +2,7 @@
 
 namespace TaskList.BusinessLogic.Tasks.Models
 {
-    public class Task
+    public class TaskModel
     {
         public int Id { get; set; }
 

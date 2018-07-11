@@ -13,7 +13,9 @@ using TaskList.BusinessLogic.Tasks.Interfaces;
 using TaskList.DataAccess;
 using TaskList.DataAccess.Repository;
 using TaskList.Filters;
+using TaskList.Hubs;
 using TaskList.Infrastructure;
+using TaskList.Services;
 
 namespace TaskList
 {
@@ -45,8 +47,11 @@ namespace TaskList
 
             services.AddDbContext<TaskListDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("SQLite")));
 
+            services.AddSignalR();
+
             services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddScoped<ITaskService, TaskService>();
+            services.AddScoped<IUserCommunicationService, UserCommunicationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -84,6 +89,11 @@ namespace TaskList
                 {
                     spa.UseAngularCliServer(npmScript: "start");
                 }
+            });
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<TaskHub>("/taskHub");
             });
 
             AutoMapperConfig.RegisterMappings();

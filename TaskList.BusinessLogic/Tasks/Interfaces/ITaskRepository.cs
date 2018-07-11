@@ -5,7 +5,7 @@ using TaskList.BusinessLogic.Tasks.Models;
 
 namespace TaskList.BusinessLogic.Tasks.Interfaces
 {
-    public interface ITaskRepository : IBaseRepository<int, Task>
+    public interface ITaskRepository : IBaseRepository<int, TaskModel>
     {
     }
 }

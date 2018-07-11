@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using TaskList.BusinessLogic;
 
 namespace TaskList.DataAccess.Repository
@@ -34,14 +35,14 @@ namespace TaskList.DataAccess.Repository
             _dbSet.Remove(entity);
         }
 
-        public IQueryable<TEntity> Get()
+        public async Task<IEnumerable<TEntity>> GetAll()
         {
-            return _dbSet;
+            return await _dbSet.ToListAsync();
         }
 
-        public TEntity GetById(TKey id)
+        public async Task<TEntity> GetById(TKey id)
         {
-            return _dbSet.Find(id);
+            return await _dbSet.FindAsync(id);
         }
 
         public void Update(TEntity entity)
@@ -60,9 +61,9 @@ namespace TaskList.DataAccess.Repository
             }
         }
 
-        public void SaveChanges()
+        public async Task SaveChanges()
         {
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

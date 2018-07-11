@@ -6,7 +6,7 @@ using TaskList.Infrastructure;
 namespace TaskList.DataContracts
 {
     [DataContract(Name = Constants.DataContracts.Task)]
-    public class Task
+    public class TaskResource
     {
         [DataMember(Name = Constants.DataMembers.Id)]
         public int Id { get; set; }
