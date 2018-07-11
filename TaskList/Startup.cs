@@ -43,7 +43,7 @@ namespace TaskList
                 configuration.RootPath = "ClientApp/dist";
             });
 
-            services.AddDbContext<TaskListDbContext>(options => options.UseSqlite("Data Source=TaskList.db"));
+            services.AddDbContext<TaskListDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("SQLite")));
 
             services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddScoped<ITaskService, TaskService>();
