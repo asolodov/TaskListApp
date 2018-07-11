@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule, ValidatorFn, AbstractControl } from '@angular/forms';
 import { Task, Status, TaskApiService } from '../../core';
 import { MatSnackBar } from '@angular/material';
-import { UserNotificationService } from '../../shared/user-notification/user-notification.service';
+import { UserNotificationService } from '../../shared';
 
 @Component({
   selector: 'app-add-task',

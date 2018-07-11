@@ -8,3 +8,5 @@
 /TaskList.DataAccess/obj
 /TaskList.DataAccess/bin
 /TaskList/TaskList.db
+/TaskList.DataAccess/publish
+/TaskList.BusinessLogic/publish

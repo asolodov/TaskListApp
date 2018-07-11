@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { TaskRoutingService } from '../task-routing.service';
 import { TaskGridComponent } from '../task-grid/task-grid.component';
-import { UserNotificationService } from '../../shared/user-notification/user-notification.service';
+import { UserNotificationService } from '../../shared';
 
 @Component({
   selector: 'app-task-list',
@@ -70,7 +70,7 @@ export class TaskListComponent implements OnInit {
   private _uploadTasks(): Subscription {
     return this.apiService.getTasks().subscribe(result => {
       this.taskList = result;
-    })
+    }, err => this.notificationService.showErrorNotification(err))
   }
 
   private _removeTask(task: Task) {

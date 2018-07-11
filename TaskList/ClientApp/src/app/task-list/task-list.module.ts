@@ -6,7 +6,7 @@ import { DxDataGridModule } from 'devextreme-angular';
 import { SharedModule } from '../shared/shared.module';
 import { TaskListRoutingModule } from './task-list-routing.module';
 import { TaskRoutingService } from './task-routing.service';
-import { UserNotificationService } from '../shared/user-notification/user-notification.service';
+import { UserNotificationService } from '../shared';
 
 
 @NgModule({

@@ -4,7 +4,7 @@ import { AddTaskComponent } from './add-task/add-task.component';
 import { SharedModule } from '../shared/shared.module';
 import { AddTaskRoutingModule } from './add-task-routing.module';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
-import { UserNotificationService } from '../shared/user-notification/user-notification.service';
+import { UserNotificationService } from '../shared';
 
 @NgModule({
   imports: [
