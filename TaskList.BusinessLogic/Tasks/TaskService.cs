@@ -17,9 +17,9 @@ namespace TaskList.BusinessLogic.Tasks
             _taskRepository = taskRepository;
         }
 
-        public IEnumerable<Task> GetTasks()
+        public IQueryable<Task> GetTasks()
         {
-            return _taskRepository.Get().ToList();
+            return _taskRepository.Get();
         }
 
         public void CreateTask(Task task)

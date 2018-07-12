@@ -1,11 +1,16 @@
 import { Component, OnInit, EventEmitter, Output, Input, ViewChild, OnDestroy } from '@angular/core';
 import { Event } from '@angular/router';
-import { Task, Status, TaskListFilter } from '../../core';
+import { Task, Status, TaskListFilter, TaskApiService } from '../../core';
 import {
   DxDataGridComponent,
   DxDataGridModule,
   DxSelectBoxModule
 } from 'devextreme-angular';
+import * as AspNetData from "devextreme-aspnet-data-nojquery";
+
+import DataSource from 'devextreme/data/data_source';
+import CustomStore from 'devextreme/data/custom_store';
+import { toPromise } from 'rxjs/add/operator';
 
 @Component({
   selector: 'app-task-grid',
@@ -20,6 +25,8 @@ export class TaskGridComponent implements OnInit, OnDestroy {
   tasks: Task[];
   @Input()
   height: string;
+
+  dataSource: any;
 
   @Input()
   set filter(filter: TaskListFilter) {
@@ -44,7 +51,19 @@ export class TaskGridComponent implements OnInit, OnDestroy {
 
   private _intervalId: any;
 
-  constructor() {
+  constructor(private apiService: TaskApiService) {
+    //this.dataSource = AspNetData.createStore({
+    //  key: "id",
+    //  loadUrl: "http://localhost:5000/api/Tasks",
+    //  onBeforeSend:options=>console.log
+    //});
+
+    this.dataSource = new DataSource({
+      load: (options: any) => {
+        return this.apiService.getTasksRange(options.skip, options.take).toPromise();
+      },
+      totalCount: (options) => -1
+    })
   }
 
   onRowSelected(event) {

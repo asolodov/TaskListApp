@@ -13,13 +13,38 @@ namespace TaskList.Controllers
     public class TasksController : Controller
     {
         private readonly ITaskService _taskService;
+        private static List<Task> tasksStatic = new List<Task>();
 
         public TasksController(ITaskService taskService)
         {
             _taskService = taskService;
+
+            for (int i = 0; i < 100000; i++)
+            {
+                tasksStatic.Add(new Task()
+                {
+                    Id = i,
+                    Name = "asd",
+                    DateAdded = DateTime.Now,
+                    TimeToComplete = DateTime.Now.AddDays(1),
+                    Status = i%2==0? Status.Active : Status.Completed,
+                    Priority = 100,
+                    Description = "123"
+                });
+            }
         }
 
         [HttpGet]
+        public DataResponseModel<IEnumerable<Task>> Get([FromQuery] int skip, [FromQuery] int take)
+        {
+            
+
+            //var tasks = _taskService.GetTasks().Take(take).Skip(skip).Select(t => Mapper.Map<Task>(t));
+            var tasks = tasksStatic.Skip(skip).Take(take).Select(t => Mapper.Map<Task>(t));
+            return new DataResponseModel<IEnumerable<Task>>(tasks);
+        }
+        [HttpGet]
+    [Route("v2/[controller]")]
         public DataResponseModel<IEnumerable<Task>> Get()
         {
             var tasks = _taskService.GetTasks().Select(t => Mapper.Map<Task>(t));

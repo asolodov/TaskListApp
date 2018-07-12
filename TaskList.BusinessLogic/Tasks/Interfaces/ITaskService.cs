@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Linq;
 using TaskList.BusinessLogic.Tasks.Models;
 
 namespace TaskList.BusinessLogic.Tasks.Interfaces
 {
     public interface ITaskService
     {
-        IEnumerable<Task> GetTasks();
+        IQueryable<Task> GetTasks();
 
         void CreateTask(Task task);
 

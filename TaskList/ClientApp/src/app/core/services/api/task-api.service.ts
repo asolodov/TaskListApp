@@ -12,6 +12,11 @@ export class TaskApiService {
   constructor(@Inject('TASK_URL') private taskUrl: string, private http: HttpClient) {
   }
 
+  getTasksRange(skip: number, take: number): Observable<Task[]> {
+    return this.http.get<ApiResponse<Task[]>>(`${this.taskUrl}?skip=${skip}&take=${take}`)
+      .pipe(map(data => data.data), catchError(err => this._handleError(err)));
+  }
+
   getTasks(): Observable<Task[]> {
     return this.http.get<ApiResponse<Task[]>>(this.taskUrl)
       .pipe(map(data => data.data), catchError(err => this._handleError(err)));
