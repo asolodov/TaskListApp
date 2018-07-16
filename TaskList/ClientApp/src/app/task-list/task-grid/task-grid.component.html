@@ -1,19 +1,20 @@
 <div class="grid-container">
   <dx-data-grid id="gridContainer"
-                [dataSource]="tasks"
+                [dataSource]="dataSource"
                 (onSelectionChanged)="onRowSelected($event)"
+                [remoteOperations]="true"
                 [height]="height">
     <dxo-selection mode="single"></dxo-selection>
     <dxi-column dataField="name" caption="Name"></dxi-column>
-    <dxi-column dataField="priority" [width]="70" caption="Priority"></dxi-column>
+    <dxi-column dataField="priority" [width]="70" caption="Priority" [allowSorting]="true"></dxi-column>
     <dxi-column dataField="dateAdded" caption="Added" dataType="date" format="yyyy-MM-dd HH:mm"></dxi-column>
     <dxi-column name="timeToComplete" caption="Time to complete"
                 [allowFiltering]="false"
                 [allowSorting]="false"
                 cellTemplate="ttcTemplate">
       <div *dxTemplate="let ttc of 'ttcTemplate'">
-        <span *ngIf="ttc.data.status == Status.Active" appDateDiff [appDateFrom]="currentDate" [appDateTo]="ttc.data.timeToComplete"></span>
-        <span *ngIf="ttc.data.status == Status.Completed">Completed</span>
+        <span *ngIf="ttc.data.status == Status[Status.Active]" appDateDiff [appDateFrom]="currentDate.toString()" [appDateTo]="ttc.data.timeToComplete.toString()"></span>
+        <span *ngIf="ttc.data.status == Status[Status.Completed]">Completed</span>
       </div>
     </dxi-column>
     <dxi-column name="edit" caption="Actions"
@@ -21,12 +22,13 @@
                 [allowSorting]="false"
                 cellTemplate="cellTemplate">
       <div *dxTemplate="let data of 'cellTemplate'">
-        <a *ngIf="data.data.status == Status.Active" (click)="completeTask(data.data)">Complete</a>
-        <a *ngIf="data.data.status == Status.Completed" (click)="removeTask(data.data)">Remove</a>
+        <a *ngIf="data.data.status == Status[Status.Active]" (click)="completeTask(data.data)">Complete</a>
+        <a *ngIf="data.data.status == Status[Status.Completed]" (click)="removeTask(data.data)">Remove</a>
       </div>
     </dxi-column>
     <dxo-load-panel [enabled]="false"></dxo-load-panel>
-    <dxo-scrolling mode="infinite"></dxo-scrolling>
-    <dxo-sorting mode="none"></dxo-sorting>
+    <dxo-scrolling mode="virtual" rowRenderingMode="virtual"></dxo-scrolling>
+    <dxo-paging [pageSize]="100"></dxo-paging>
+    <dxo-sorting mode="single"></dxo-sorting>
   </dx-data-grid>
 </div>

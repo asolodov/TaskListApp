@@ -1,29 +1,29 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Query;
+using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using TaskList.BusinessLogic.Tasks.Interfaces;
 using TaskList.DataContracts;
-using TaskList.DataContracts.Response;
 
 namespace TaskList.Controllers
 {
-    [Route("api/[controller]")]
-    public class TasksController : Controller
+    [ODataRoutePrefix("api/Task")]
+    public class TaskController : Controller
     {
         private readonly ITaskService _taskService;
 
-        public TasksController(ITaskService taskService)
+        public TaskController(ITaskService taskService)
         {
             _taskService = taskService;
         }
 
         [HttpGet]
-        public DataResponseModel<IEnumerable<Task>> Get()
+        public ActionResult Get(ODataQueryOptions<Task> query)
         {
-            var tasks = _taskService.GetTasks().Select(t => Mapper.Map<Task>(t));
-            return new DataResponseModel<IEnumerable<Task>>(tasks);
+            var filteredQuery = query.ApplyTo(_taskService.GetTasks().ProjectTo<Task>());
+            return Ok(filteredQuery);
         }
 
         [HttpPost]
@@ -34,23 +34,22 @@ namespace TaskList.Controllers
             return Ok();
         }
 
-        [HttpPut]
-        [Route("{id:int}")]
-        public ActionResult Put(int id, [FromBody] Task task)
+        [HttpPatch]
+        [ODataRoute("({key})")]
+        public ActionResult Patch([FromODataUri]int key, [FromBody] Task task)
         {
             var blTask = Mapper.Map<BusinessLogic.Tasks.Models.Task>(task);
-            blTask.Id = id;
+            blTask.Id = key;
             _taskService.UpdateTask(blTask);
             return Ok();
         }
 
         [HttpDelete]
-        [Route("{id:int}")]
-        public ActionResult Delete(int id)
+        [ODataRoute("({key})")]
+        public ActionResult Delete([FromODataUri]int key)
         {
-            _taskService.DeleteTask(id);
+            _taskService.DeleteTask(key);
             return Ok();
         }
-
     }
 }

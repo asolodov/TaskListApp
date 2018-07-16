@@ -9,7 +9,7 @@
 </div>
 <div>
   <div class="task-list">
-    <app-task-grid [tasks]="taskList"
+    <app-task-grid (onInitialized)="onGridInitialized()"
                    (onSelectionChanged)="onTaskSelected($event)"
                    (onTaskCompleted)="onTaskCompleted($event)"
                    (onTaskDeleted)="onTaskDeleted($event)"

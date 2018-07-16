@@ -12,10 +12,9 @@ import { UserNotificationService } from '../../shared';
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.css']
 })
-export class TaskListComponent implements OnInit {
+export class TaskListComponent {
   TaskListFilter = TaskListFilter;
 
-  taskList: Task[];
   taskDetails: Task;
   taskFilter: TaskListFilter = TaskListFilter.All;
 
@@ -28,13 +27,11 @@ export class TaskListComponent implements OnInit {
     private notificationService: UserNotificationService) {
   }
 
-  ngOnInit() {
-    this._uploadTasks().add(() => {
-      let routeId = this.activatedRoute.snapshot.params['id'];
-      if (routeId) {
-        this.taskDetails = this.taskList.find(t => t.id == routeId);
-      }
-    });
+  onGridInitialized() {
+    const routeId = this.activatedRoute.snapshot.params['id'];
+    if (routeId) {
+      this.taskGrid.selectRow(routeId);
+    }
   }
 
   onTaskSelected(task: Task) {
@@ -43,41 +40,24 @@ export class TaskListComponent implements OnInit {
   }
 
   refresh() {
-    this._uploadTasks().add(() => {
-      setTimeout(() => this.taskGrid.refreshGrid());
-    });
+    this.taskGrid.refreshGrid();
   }
 
   onTaskCompleted(task: Task) {
-    this.apiService.completeTask(task).subscribe((data) => {
-      task.status = Status.Completed;
-      this.taskGrid.refreshGrid();
-      this.notificationService.showSuccessNotification("Task has been completed");
-    }, err => this.notificationService.showErrorNotification(err));
+    this.taskGrid.updateRow(task.id, { ...task, status: `${Status.Completed}` })
+      .subscribe(
+        () => this.notificationService.showSuccessNotification("Task has been completed"),
+        (err) => this.notificationService.showErrorNotification(err)
+      );
   }
 
   onTaskDeleted(task: Task) {
-    this.apiService.deleteTask(task).subscribe((data) => {
-      this._removeTask(task);
-      this.notificationService.showSuccessNotification("Task has been deleted");
-    }, err => this.notificationService.showErrorNotification(err));
+    this.taskGrid.deleteRow(task.id).subscribe(
+      () => this.notificationService.showSuccessNotification("Task has been deleted"),
+      (err) => this.notificationService.showErrorNotification(err));
   }
 
   onFilterChange(value: TaskListFilter) {
     this.taskFilter = value;
-  }
-
-  private _uploadTasks(): Subscription {
-    return this.apiService.getTasks().subscribe(result => {
-      this.taskList = result;
-    }, err => this.notificationService.showErrorNotification(err))
-  }
-
-  private _removeTask(task: Task) {
-    for (var i = 0; i < this.taskList.length; i++) {
-      if (this.taskList[i].id == task.id) {
-        this.taskList.splice(i, 1);
-      }
-    }
   }
 }
