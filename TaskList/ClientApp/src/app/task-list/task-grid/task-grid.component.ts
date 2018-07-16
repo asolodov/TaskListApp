@@ -28,8 +28,6 @@ export class TaskGridComponent implements OnInit, OnDestroy {
   private _deleteObserversMap: Map<number, Observer<number>> = new Map();
 
   @Input()
-  tasks: Task[];
-  @Input()
   height: string;
   @Input()
   set filter(filter: TaskListFilter) {
@@ -65,7 +63,14 @@ export class TaskGridComponent implements OnInit, OnDestroy {
           const observable = this._deleteObserversMap.get(key);
           observable.next(key);
           observable.complete();
+          this._deleteObserversMap.delete(key);
         }
+      },
+      errorHandler: (options) => {
+        this._deleteObserversMap.forEach((data) => {
+          data.error(options.message);
+        });
+        this._deleteObserversMap.clear();
       },
       deserializeDates: false
     });
