@@ -23,24 +23,15 @@ export class TaskApiService {
   }
 
   createTask(task: Task) {
-    return this.http.post<Task>(this.taskUrl, {
-      ...task,
-      timeToComplete: task.timeToComplete.toISOString()
-    }).pipe(data => data, catchError(err => this._handleError(err)));
+    return this.http.post<Task>(this.taskUrl, task)
+      .pipe(data => data, catchError(err => this._handleError(err)));
   }
 
   updateTask(task: Task) {
-    debugger;
     return this.http.put(`${this.taskUrl}(${task.id})`, {
       ...task,
-      status: Status[task.status]
+      status: `${task.status}`
     }).pipe(data => data, catchError(err => this._handleError(err)));
-  }
-
-  completeTask(task: Task) {
-    let updatedTask = Object.assign(task, { status: Status[Status.Completed] });
-    return this.http.put(`${this.taskUrl}(${task.id})`, updatedTask)
-      .pipe(data => data, catchError(err => this._handleError(err)));
   }
 
   deleteTask(task: Task) {
