@@ -1,5 +1,5 @@
 import { Injectable, } from '@angular/core';
-import ODataStore from "devextreme/data/odata/store";=
+import ODataStore from "devextreme/data/odata/store";
 
 @Injectable()
 export class StoreProviderService {
