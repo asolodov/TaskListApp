@@ -8,7 +8,8 @@ import {
 } from 'devextreme-angular';
 import { from, Observable, Observer } from 'rxjs';
 import DataSource from 'devextreme/data/data_source';
-import ODataStore from "devextreme/data/odata/store";
+import CustomStore from 'devextreme/data/custom_store'
+import { StoreProviderService } from '../store-provider/store-provider.service';
 
 @Component({
   selector: 'app-task-grid',
@@ -23,7 +24,7 @@ export class TaskGridComponent implements OnInit, OnDestroy {
   dataSource: DataSource;
 
   private _intervalId: any;
-  private _store: ODataStore;
+  private _store: CustomStore;
   private _deleteObserversMap: Map<number, Observer<number>> = new Map();
 
   @Input()
@@ -52,9 +53,9 @@ export class TaskGridComponent implements OnInit, OnDestroy {
   @ViewChild(DxDataGridComponent) dataGrid: DxDataGridComponent;
 
 
-  constructor(@Inject('TASK_URL') private taskUrl: string, private apiService: TaskApiService) {
+  constructor(@Inject('TASK_URL') private taskUrl: string, private storeProvider: StoreProviderService) {
 
-    this._store = new ODataStore({
+    this._store = this.storeProvider.configureStore({
       url: this.taskUrl,
       key: "id",
       keyType: "Int32",
