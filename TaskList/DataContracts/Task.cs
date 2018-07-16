@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using TaskList.Infrastructure;
@@ -19,6 +21,7 @@ namespace TaskList.DataContracts
         public string Description { get; set; }
 
         [Required]
+        //[JsonConverter(typeof(StringEnumConverter))]
         [DataMember(Name = Constants.DataMembers.Status)]
         public Status Status { get; set; }
 

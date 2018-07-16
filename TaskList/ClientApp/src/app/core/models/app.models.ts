@@ -21,7 +21,7 @@ export interface Task {
 
 
 export interface ApiResponse<T> {
-  data: T,
+  value: T,
   errors: Error[]
 }
 

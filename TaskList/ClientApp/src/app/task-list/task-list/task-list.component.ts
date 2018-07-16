@@ -43,24 +43,32 @@ export class TaskListComponent implements OnInit {
   }
 
   refresh() {
-    this._uploadTasks().add(() => {
-      setTimeout(() => this.taskGrid.refreshGrid());
-    });
+    //this._uploadTasks().add(() => {
+    //  setTimeout(() => this.taskGrid.refreshGrid());
+    //});
+
+    this.taskGrid.refreshGrid(); ``
   }
 
   onTaskCompleted(task: Task) {
-    this.apiService.completeTask(task).subscribe((data) => {
-      task.status = Status.Completed;
-      this.taskGrid.refreshGrid();
-      this.notificationService.showSuccessNotification("Task has been completed");
-    }, err => this.notificationService.showErrorNotification(err));
+    this.taskGrid.updateRow(task.id, { ...task, status: `${Status.Completed}` })
+      .then(() => this.notificationService.showSuccessNotification("Task has been completed"))
+      .catch(err => this.notificationService.showErrorNotification(err));
+
+    //this.apiService.completeTask(task).subscribe((data) => {
+    //  task.status = Status.Completed;
+    //  this.taskGrid.refreshGrid();
+    //  this.notificationService.showSuccessNotification("Task has been completed");
+    //}, err => this.notificationService.showErrorNotification(err));
   }
 
   onTaskDeleted(task: Task) {
-    this.apiService.deleteTask(task).subscribe((data) => {
-      this._removeTask(task);
-      this.notificationService.showSuccessNotification("Task has been deleted");
-    }, err => this.notificationService.showErrorNotification(err));
+    //this.apiService.deleteTask(task).subscribe((data) => {
+    //  this._removeTask(task);
+    //  this.notificationService.showSuccessNotification("Task has been deleted");
+    //}, err => this.notificationService.showErrorNotification(err));
+
+    this.taskGrid.deleteRow(task.id);
   }
 
   onFilterChange(value: TaskListFilter) {

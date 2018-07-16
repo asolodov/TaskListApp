@@ -10,7 +10,9 @@ import * as AspNetData from "devextreme-aspnet-data-nojquery";
 
 import DataSource from 'devextreme/data/data_source';
 import CustomStore from 'devextreme/data/custom_store';
-import { toPromise } from 'rxjs/add/operator';
+import { retry } from 'rxjs/operators';
+import ODataStore from "devextreme/data/odata/store";
+import { Promise } from 'q';
 
 @Component({
   selector: 'app-task-grid',
@@ -51,23 +53,81 @@ export class TaskGridComponent implements OnInit, OnDestroy {
 
   private _intervalId: any;
 
+  private _data = [];
+
+  private _store: ODataStore;
+
   constructor(private apiService: TaskApiService) {
+
+    //for (var i = 0; i < 1000; i++) {
+    //  this._data.push({
+    //    id: i,
+    //    name: i.toString(),
+    //    dateAdded: new Date(),
+    //    status: i % 2 == 0 ? Status.Active : Status.Completed
+    //  })
+    //}
+
+    this.dataSource = new DataSource({
+      load: (opts) => {
+        console.log(opts);
+        return this._data.slice(opts.skip, opts.skip + opts.take);
+      },
+      totalCount: () => -1,
+      remove: key => {
+        console.log(key);
+        for (var i = 0; i < this._data.length; i++) {
+          if (this._data[i].id == key) {
+            this._data.splice(i, 1);
+          }
+        }
+        return Promise.resolve();
+      },
+      key: "id"
+    });
+
     //this.dataSource = AspNetData.createStore({
     //  key: "id",
     //  loadUrl: "http://localhost:5000/api/Tasks",
-    //  onBeforeSend:options=>console.log
+    //  deleteUrl: "http://localhost:5000/api/Tasks",
+    //  updateUrl: "http://localhost:5000/api/Tasks"
     //});
 
-    this.dataSource = new DataSource({
-      load: (options: any) => {
-        return this.apiService.getTasksRange(options.skip, options.take).toPromise();
-      },
-      totalCount: (options) => -1
-    })
-  }
+    //this.dataSource = new DataSource({
+    //  load: (options: any) => {
+    //    return this.apiService.getTasksRange(options.skip, options.take).toPromise();
+    //  },
+    //  remove: (key) => {
+    //    return Promise.resolve();
+    //    //this.apiService.deleteTask(options);
+    //  },
+    //  totalCount: (options) => -1
+    //});
 
+    //===== or inside the DataSource =====
+    this._store = new ODataStore({
+      url: "http://localhost:5000/api/Task",
+      key: "id",
+      keyType: "Int32",
+      version: 4,
+      onRemoved: (options) => {
+        console.log(options)
+      }
+      // Other ODataStore options go here
+    });
+
+    this.dataSource = new DataSource({
+      store: this._store
+    });
+  }
+  test(data: any) {
+    console.log(data);
+  }
   onRowSelected(event) {
-    this.onSelectionChanged.emit(event.currentSelectedRowKeys[0]);
+    //this.dataGrid.instance.getSelectedRowsData().then((data) => {
+    //  this.onSelectionChanged.emit(data);
+    //})
+    this.onSelectionChanged.emit(this.dataGrid.instance.getSelectedRowsData()[0]);
   }
 
   public completeTask(task: Task) {
@@ -80,13 +140,26 @@ export class TaskGridComponent implements OnInit, OnDestroy {
 
   public refreshGrid() {
     this.dataGrid.instance.refresh();
-    this._setupFilter()
+    this._setupFilter();
+  }
+
+  public deleteRow(id: number) {
+    const key = this.dataGrid.instance.getRowIndexByKey(id)
+    this.dataGrid.instance.deleteRow(key);
+  }
+
+  public updateRow(key, values) {
+    return this._store.update(key, values);
   }
 
   ngOnInit() {
     this._intervalId = setInterval(() => {
       this.currentDate = new Date();
     }, this.TIMER_INTERVAL);
+
+    this.dataGrid.onInitialized.subscribe(() => {
+      this.dataGrid.editing.texts.confirmDeleteMessage = '';
+    });
   }
 
   ngOnDestroy() {
@@ -100,10 +173,10 @@ export class TaskGridComponent implements OnInit, OnDestroy {
           this.dataGrid.instance.clearFilter();
           break;
         case TaskListFilter.Active:
-          this.dataGrid.instance.filter(["status", "=", Status.Active]);
+          this.dataGrid.instance.filter(["status", "=", `${Status.Active}`]);
           break;
         case TaskListFilter.Completed:
-          this.dataGrid.instance.filter(["status", "=", Status.Completed]);
+          this.dataGrid.instance.filter(["status", "=", `${Status.Completed}`]);
           break;
       }
     }

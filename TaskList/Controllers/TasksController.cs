@@ -1,4 +1,8 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Query;
+using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -9,25 +13,29 @@ using TaskList.DataContracts.Response;
 
 namespace TaskList.Controllers
 {
-    [Route("api/[controller]")]
-    public class TasksController : Controller
+    [ODataRoutePrefix("api/Task]")]
+    public class TaskController : Controller
     {
         private readonly ITaskService _taskService;
-        private static List<Task> tasksStatic = new List<Task>();
+        private static List<BusinessLogic.Tasks.Models.Task> tasksStatic = new List<BusinessLogic.Tasks.Models.Task>();
 
-        public TasksController(ITaskService taskService)
+        public TaskController(ITaskService taskService)
         {
             _taskService = taskService;
 
+            if (tasksStatic.Count>0)
+            {
+                return;
+            }
             for (int i = 0; i < 100000; i++)
             {
-                tasksStatic.Add(new Task()
+                tasksStatic.Add(new BusinessLogic.Tasks.Models.Task()
                 {
                     Id = i,
                     Name = "asd",
                     DateAdded = DateTime.Now,
                     TimeToComplete = DateTime.Now.AddDays(1),
-                    Status = i%2==0? Status.Active : Status.Completed,
+                    Status = i % 2 == 0 ? BusinessLogic.Tasks.Models.Status.Active : BusinessLogic.Tasks.Models.Status.Completed,
                     Priority = 100,
                     Description = "123"
                 });
@@ -35,21 +43,13 @@ namespace TaskList.Controllers
         }
 
         [HttpGet]
-        public DataResponseModel<IEnumerable<Task>> Get([FromQuery] int skip, [FromQuery] int take)
+        [EnableQuery]
+        public IActionResult Get(/*ODataQueryOptions<Task> query*/)
         {
-            
+            return Ok(_taskService.GetTasks().ProjectTo<Task>());
+            //return Ok(tasksStatic.AsQueryable().ProjectTo<Task>());
+        }
 
-            //var tasks = _taskService.GetTasks().Take(take).Skip(skip).Select(t => Mapper.Map<Task>(t));
-            var tasks = tasksStatic.Skip(skip).Take(take).Select(t => Mapper.Map<Task>(t));
-            return new DataResponseModel<IEnumerable<Task>>(tasks);
-        }
-        [HttpGet]
-    [Route("v2/[controller]")]
-        public DataResponseModel<IEnumerable<Task>> Get()
-        {
-            var tasks = _taskService.GetTasks().Select(t => Mapper.Map<Task>(t));
-            return new DataResponseModel<IEnumerable<Task>>(tasks);
-        }
 
         [HttpPost]
         public ActionResult Post([FromBody] Task task)
@@ -59,23 +59,22 @@ namespace TaskList.Controllers
             return Ok();
         }
 
-        [HttpPut]
-        [Route("{id:int}")]
-        public ActionResult Put(int id, [FromBody] Task task)
+        [HttpPatch]
+        [ODataRoute("({key})")]
+        public ActionResult Patch([FromODataUri]int key, [FromBody] Task task)
         {
             var blTask = Mapper.Map<BusinessLogic.Tasks.Models.Task>(task);
-            blTask.Id = id;
+            blTask.Id = key;
             _taskService.UpdateTask(blTask);
             return Ok();
         }
 
         [HttpDelete]
-        [Route("{id:int}")]
-        public ActionResult Delete(int id)
+        [ODataRoute("({key})")]
+        public ActionResult Delete([FromODataUri]int key)
         {
-            _taskService.DeleteTask(id);
+            _taskService.DeleteTask(key);
             return Ok();
         }
-
     }
 }
