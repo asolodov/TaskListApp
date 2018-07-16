@@ -60,15 +60,16 @@ export class TaskGridComponent implements OnInit, OnDestroy {
       version: 4,
       onRemoved: (key) => {
         if (this._deleteObserversMap.has(key)) {
-          const observable = this._deleteObserversMap.get(key);
-          observable.next(key);
-          observable.complete();
+          const observer = this._deleteObserversMap.get(key);
+          observer.next(key);
+          observer.complete();
           this._deleteObserversMap.delete(key);
         }
       },
       errorHandler: (options) => {
-        this._deleteObserversMap.forEach((data) => {
-          data.error(options.message);
+        this._deleteObserversMap.forEach((observer) => {
+          observer.error(options.message);
+          observer.complete();
         });
         this._deleteObserversMap.clear();
       },
