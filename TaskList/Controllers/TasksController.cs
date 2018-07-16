@@ -4,52 +4,27 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using TaskList.BusinessLogic.Tasks.Interfaces;
 using TaskList.DataContracts;
-using TaskList.DataContracts.Response;
 
 namespace TaskList.Controllers
 {
-    [ODataRoutePrefix("api/Task]")]
+    [ODataRoutePrefix("api/Task")]
     public class TaskController : Controller
     {
         private readonly ITaskService _taskService;
-        private static List<BusinessLogic.Tasks.Models.Task> tasksStatic = new List<BusinessLogic.Tasks.Models.Task>();
 
         public TaskController(ITaskService taskService)
         {
             _taskService = taskService;
-
-            if (tasksStatic.Count>0)
-            {
-                return;
-            }
-            for (int i = 0; i < 100000; i++)
-            {
-                tasksStatic.Add(new BusinessLogic.Tasks.Models.Task()
-                {
-                    Id = i,
-                    Name = "asd",
-                    DateAdded = DateTime.Now,
-                    TimeToComplete = DateTime.Now.AddDays(1),
-                    Status = i % 2 == 0 ? BusinessLogic.Tasks.Models.Status.Active : BusinessLogic.Tasks.Models.Status.Completed,
-                    Priority = 100,
-                    Description = "123"
-                });
-            }
         }
 
         [HttpGet]
-        [EnableQuery]
-        public IActionResult Get(/*ODataQueryOptions<Task> query*/)
+        public ActionResult Get(ODataQueryOptions<Task> query)
         {
-            return Ok(_taskService.GetTasks().ProjectTo<Task>());
-            //return Ok(tasksStatic.AsQueryable().ProjectTo<Task>());
+            var filteredQuery = query.ApplyTo(_taskService.GetTasks().ProjectTo<Task>());
+            return Ok(filteredQuery);
         }
-
 
         [HttpPost]
         public ActionResult Post([FromBody] Task task)

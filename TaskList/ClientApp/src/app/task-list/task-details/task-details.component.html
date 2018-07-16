@@ -19,8 +19,7 @@
     </div>
     <div class="details-row">
       <div class="row-label">Added:</div>
-      <div class="row-content">{{task.dateAdded}}</div>
-      <div class="row-content">{{task.timeToComplete}}</div>
+      <div class="row-content">{{task.dateAdded | date:'yyyy-MM-dd HH:mm'}}</div>
     </div>
   </div>
 </div>

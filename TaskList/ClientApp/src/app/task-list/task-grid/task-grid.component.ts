@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, Input, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input, ViewChild, OnDestroy, Inject } from '@angular/core';
 import { Event } from '@angular/router';
 import { Task, Status, TaskListFilter, TaskApiService } from '../../core';
 import {
@@ -6,13 +6,9 @@ import {
   DxDataGridModule,
   DxSelectBoxModule
 } from 'devextreme-angular';
-import * as AspNetData from "devextreme-aspnet-data-nojquery";
-
+import { from, Observable, Observer } from 'rxjs';
 import DataSource from 'devextreme/data/data_source';
-import CustomStore from 'devextreme/data/custom_store';
-import { retry } from 'rxjs/operators';
 import ODataStore from "devextreme/data/odata/store";
-import { Promise } from 'q';
 
 @Component({
   selector: 'app-task-grid',
@@ -23,13 +19,17 @@ export class TaskGridComponent implements OnInit, OnDestroy {
   private readonly TIMER_INTERVAL: number = 1000;
   Status = Status;
 
+  currentDate: Date = new Date();
+  dataSource: DataSource;
+
+  private _intervalId: any;
+  private _store: ODataStore;
+  private _deleteObserversMap: Map<number, Observer<number>> = new Map();
+
   @Input()
   tasks: Task[];
   @Input()
   height: string;
-
-  dataSource: any;
-
   @Input()
   set filter(filter: TaskListFilter) {
     this._filter = filter;
@@ -41,6 +41,8 @@ export class TaskGridComponent implements OnInit, OnDestroy {
   private _filter: TaskListFilter;
 
   @Output()
+  onInitialized: EventEmitter<void> = new EventEmitter();
+  @Output()
   onSelectionChanged: EventEmitter<Task> = new EventEmitter();
   @Output()
   onTaskCompleted: EventEmitter<Task> = new EventEmitter();
@@ -49,121 +51,74 @@ export class TaskGridComponent implements OnInit, OnDestroy {
 
   @ViewChild(DxDataGridComponent) dataGrid: DxDataGridComponent;
 
-  currentDate: Date = new Date();
 
-  private _intervalId: any;
+  constructor(@Inject('TASK_URL') private taskUrl: string, private apiService: TaskApiService) {
 
-  private _data = [];
-
-  private _store: ODataStore;
-
-  constructor(private apiService: TaskApiService) {
-
-    //for (var i = 0; i < 1000; i++) {
-    //  this._data.push({
-    //    id: i,
-    //    name: i.toString(),
-    //    dateAdded: new Date(),
-    //    status: i % 2 == 0 ? Status.Active : Status.Completed
-    //  })
-    //}
-
-    this.dataSource = new DataSource({
-      load: (opts) => {
-        console.log(opts);
-        return this._data.slice(opts.skip, opts.skip + opts.take);
-      },
-      totalCount: () => -1,
-      remove: key => {
-        console.log(key);
-        for (var i = 0; i < this._data.length; i++) {
-          if (this._data[i].id == key) {
-            this._data.splice(i, 1);
-          }
-        }
-        return Promise.resolve();
-      },
-      key: "id"
-    });
-
-    //this.dataSource = AspNetData.createStore({
-    //  key: "id",
-    //  loadUrl: "http://localhost:5000/api/Tasks",
-    //  deleteUrl: "http://localhost:5000/api/Tasks",
-    //  updateUrl: "http://localhost:5000/api/Tasks"
-    //});
-
-    //this.dataSource = new DataSource({
-    //  load: (options: any) => {
-    //    return this.apiService.getTasksRange(options.skip, options.take).toPromise();
-    //  },
-    //  remove: (key) => {
-    //    return Promise.resolve();
-    //    //this.apiService.deleteTask(options);
-    //  },
-    //  totalCount: (options) => -1
-    //});
-
-    //===== or inside the DataSource =====
     this._store = new ODataStore({
-      url: "http://localhost:5000/api/Task",
+      url: this.taskUrl,
       key: "id",
       keyType: "Int32",
       version: 4,
-      onRemoved: (options) => {
-        console.log(options)
-      }
-      // Other ODataStore options go here
+      onRemoved: (key) => {
+        if (this._deleteObserversMap.has(key)) {
+          const observable = this._deleteObserversMap.get(key);
+          observable.next(key);
+          observable.complete();
+        }
+      },
+      deserializeDates: false
     });
 
     this.dataSource = new DataSource({
       store: this._store
     });
   }
-  test(data: any) {
-    console.log(data);
+
+  ngOnInit() {
+    this.dataGrid.onInitialized.subscribe(() => {
+      this.onInitialized.emit();
+      this.dataGrid.editing.texts.confirmDeleteMessage = '';
+    });
+
+    this._intervalId = setInterval(() => {
+      this.currentDate = new Date();
+    }, this.TIMER_INTERVAL);
   }
+
+  ngOnDestroy() {
+    clearInterval(this._intervalId);
+  }
+
   onRowSelected(event) {
-    //this.dataGrid.instance.getSelectedRowsData().then((data) => {
-    //  this.onSelectionChanged.emit(data);
-    //})
     this.onSelectionChanged.emit(this.dataGrid.instance.getSelectedRowsData()[0]);
   }
 
-  public completeTask(task: Task) {
+  completeTask(task: Task) {
     this.onTaskCompleted.emit(task);
   }
 
-  public removeTask(task: Task) {
+  removeTask(task: Task) {
     this.onTaskDeleted.emit(task);
   }
 
   public refreshGrid() {
     this.dataGrid.instance.refresh();
-    this._setupFilter();
   }
 
   public deleteRow(id: number) {
-    const key = this.dataGrid.instance.getRowIndexByKey(id)
-    this.dataGrid.instance.deleteRow(key);
-  }
-
-  public updateRow(key, values) {
-    return this._store.update(key, values);
-  }
-
-  ngOnInit() {
-    this._intervalId = setInterval(() => {
-      this.currentDate = new Date();
-    }, this.TIMER_INTERVAL);
-
-    this.dataGrid.onInitialized.subscribe(() => {
-      this.dataGrid.editing.texts.confirmDeleteMessage = '';
+    return Observable.create((observer) => {
+      this._deleteObserversMap.set(id, observer);
+      const index = this.dataGrid.instance.getRowIndexByKey(id)
+      this.dataGrid.instance.deleteRow(index);
     });
   }
 
-  ngOnDestroy() {
-    clearInterval(this._intervalId);
+  public updateRow(key, values): Observable<any> {
+    return from(this._store.update(key, values).then(() => this.refreshGrid()));
+  }
+
+  public selectRow(key) {
+    this.dataGrid.instance.selectRows([key], false);
   }
 
   private _setupFilter() {

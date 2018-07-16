@@ -6,7 +6,7 @@
                 [height]="height">
     <dxo-selection mode="single"></dxo-selection>
     <dxi-column dataField="name" caption="Name"></dxi-column>
-    <dxi-column dataField="priority" [width]="70" caption="Priority"></dxi-column>
+    <dxi-column dataField="priority" [width]="70" caption="Priority" [allowSorting]="true"></dxi-column>
     <dxi-column dataField="dateAdded" caption="Added" dataType="date" format="yyyy-MM-dd HH:mm"></dxi-column>
     <dxi-column name="timeToComplete" caption="Time to complete"
                 [allowFiltering]="false"
@@ -29,6 +29,6 @@
     <dxo-load-panel [enabled]="false"></dxo-load-panel>
     <dxo-scrolling mode="virtual" rowRenderingMode="virtual"></dxo-scrolling>
     <dxo-paging [pageSize]="100"></dxo-paging>
-    <dxo-sorting mode="none"></dxo-sorting>
+    <dxo-sorting mode="single"></dxo-sorting>
   </dx-data-grid>
 </div>
