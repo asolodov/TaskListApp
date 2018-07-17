@@ -24,7 +24,7 @@ namespace TaskList.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Get(ODataQueryOptions<Task> query)
+        public async Task<ActionResult> Get(ODataQueryOptions<TaskResource> query)
         {
             var filteredQuery = query.ApplyTo(_taskService.GetTasks().ProjectTo<TaskResource>());
             return Ok(await filteredQuery.Cast<TaskResource>().ToListAsync());
@@ -40,7 +40,7 @@ namespace TaskList.Controllers
 
         [HttpPatch]
         [ODataRoute("({key})")]
-        public async Task<ActionResult> Patch([FromODataUri]int key, [FromBody] Task task)
+        public async Task<ActionResult> Patch([FromODataUri]int key, [FromBody] TaskResource task)
         {
             var blTask = Mapper.Map<TaskModel>(task);
             blTask.Id = key;
