@@ -8,7 +8,9 @@ namespace TaskList.AutoMapping
     {
         public TaskListProfile()
         {
-            CreateMap<TaskModel, TaskResource>().ReverseMap();
+            CreateMap<TaskModel, TaskResource>()
+                .ForMember(s => s.Status, opt => opt.MapFrom(d => (DataContracts.Status) d.Status))
+                .ReverseMap();
             CreateMap<BusinessLogic.Tasks.Models.Status, DataContracts.Status>().ReverseMap();
         }
     }

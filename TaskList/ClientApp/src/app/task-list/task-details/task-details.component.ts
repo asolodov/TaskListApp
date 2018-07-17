@@ -12,5 +12,4 @@ export class TaskDetailsComponent {
   task: Task;
 
   constructor() { }
-  
 }

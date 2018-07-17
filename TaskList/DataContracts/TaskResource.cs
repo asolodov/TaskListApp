@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using TaskList.Infrastructure;

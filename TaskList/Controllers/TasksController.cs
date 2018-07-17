@@ -1,31 +1,33 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Query;
+using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using TaskList.BusinessLogic.Tasks.Interfaces;
 using TaskList.BusinessLogic.Tasks.Models;
 using TaskList.DataContracts;
-using TaskList.DataContracts.Response;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace TaskList.Controllers
 {
-    [Route("api/[controller]")]
-    public class TasksController : Controller
+    [ODataRoutePrefix("api/Task")]
+    public class TaskController : Controller
     {
         private readonly ITaskService _taskService;
 
-        public TasksController(ITaskService taskService)
+        public TaskController(ITaskService taskService)
         {
             _taskService = taskService;
         }
 
         [HttpGet]
-        public async Task<DataResponseModel<IEnumerable<TaskResource>>> Get()
+        public async Task<ActionResult> Get(ODataQueryOptions<Task> query)
         {
-            var tasks = (await _taskService.GetTasks()).Select(t => Mapper.Map<TaskResource>(t));
-            return new DataResponseModel<IEnumerable<TaskResource>>(tasks);
+            var filteredQuery = query.ApplyTo(_taskService.GetTasks().ProjectTo<TaskResource>());
+            return Ok(await filteredQuery.Cast<TaskResource>().ToListAsync());
         }
 
         [HttpPost]
@@ -36,23 +38,22 @@ namespace TaskList.Controllers
             return Ok();
         }
 
-        [HttpPut]
-        [Route("{id:int}")]
-        public async Task<ActionResult> Put(int id, [FromBody] TaskResource task)
+        [HttpPatch]
+        [ODataRoute("({key})")]
+        public async Task<ActionResult> Patch([FromODataUri]int key, [FromBody] Task task)
         {
             var blTask = Mapper.Map<TaskModel>(task);
-            blTask.Id = id;
+            blTask.Id = key;
             await _taskService.UpdateTask(blTask);
             return Ok();
         }
 
         [HttpDelete]
-        [Route("{id:int}")]
-        public async Task<ActionResult> Delete(int id)
+        [ODataRoute("({key})")]
+        public async Task<ActionResult> Delete([FromODataUri]int key)
         {
-            await _taskService.DeleteTask(id);
+            await _taskService.DeleteTask(key);
             return Ok();
         }
-
     }
 }

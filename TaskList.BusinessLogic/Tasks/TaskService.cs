@@ -20,9 +20,9 @@ namespace TaskList.BusinessLogic.Tasks
             _userCommunicationService = userCommunicationService;
         }
 
-        public async Task<IEnumerable<TaskModel>> GetTasks()
+        public IQueryable<TaskModel> GetTasks()
         {
-            return await _taskRepository.GetAll();
+            return _taskRepository.Get();
         }
 
         public async Task CreateTask(TaskModel task)

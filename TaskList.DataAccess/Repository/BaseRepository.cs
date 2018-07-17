@@ -35,9 +35,9 @@ namespace TaskList.DataAccess.Repository
             _dbSet.Remove(entity);
         }
 
-        public async Task<IEnumerable<TEntity>> GetAll()
+        public IQueryable<TEntity> Get()
         {
-            return await _dbSet.ToListAsync();
+            return _dbSet;
         }
 
         public async Task<TEntity> GetById(TKey id)

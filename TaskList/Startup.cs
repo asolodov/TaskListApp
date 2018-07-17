@@ -1,13 +1,18 @@
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using Microsoft.OData;
+using Microsoft.OData.UriParser;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
+using System.Collections.Generic;
 using TaskList.BusinessLogic.Tasks;
 using TaskList.BusinessLogic.Tasks.Interfaces;
 using TaskList.DataAccess;
@@ -39,6 +44,8 @@ namespace TaskList
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddJsonOptions(options => { options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc; });
 
+            services.AddOData();
+
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -67,7 +74,6 @@ namespace TaskList
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
@@ -76,6 +82,13 @@ namespace TaskList
                 routes.MapRoute(
                     name: "default",
                     template: "{controller}/{action=Index}/{id?}");
+
+                routes.SetTimeZoneInfo(TimeZoneInfo.Utc);
+                routes.MapODataServiceRoute("ODataRoute", "api", builder => builder
+                .AddService(Microsoft.OData.ServiceLifetime.Singleton, sp => ODataConfig.BuildEdmModel(app.ApplicationServices))
+                .AddService<IEnumerable<IODataRoutingConvention>>(Microsoft.OData.ServiceLifetime.Singleton, sp => ODataRoutingConventions.CreateDefaultWithAttributeRouting("ODataRoute", routes))
+                .AddService<ODataUriResolver>(Microsoft.OData.ServiceLifetime.Singleton, sp => new StringAsEnumResolver { EnableCaseInsensitive = true }));
+           
             });
 
             app.UseSpa(spa =>

@@ -7,6 +7,7 @@ import { SharedModule } from '../shared/shared.module';
 import { TaskListRoutingModule } from './task-list-routing.module';
 import { TaskRoutingService } from './task-routing.service';
 import { UserNotificationService } from '../shared';
+import { StoreProviderService } from './store-provider/store-provider.service';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { UserNotificationService } from '../shared';
   ],
   providers: [
     TaskRoutingService,
-    UserNotificationService
+    UserNotificationService,
+    StoreProviderService
   ]
 })
 export class TaskListModule { }

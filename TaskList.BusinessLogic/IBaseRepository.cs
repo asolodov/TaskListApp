@@ -8,7 +8,7 @@ namespace TaskList.BusinessLogic
 {
     public interface IBaseRepository<TKey, TEntity> where TEntity : class
     {
-        Task<IEnumerable<TEntity>> GetAll();
+        IQueryable<TEntity> Get();
 
         Task<TEntity> GetById(TKey id);
 

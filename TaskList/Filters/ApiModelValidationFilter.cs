@@ -22,7 +22,9 @@ namespace TaskList.Filters
 
         private BaseResponseModel PrepareErrorResponse(ModelStateDictionary modelState)
         {
-            var errors = modelState.Values.SelectMany(t => t.Errors).Select(t => new ApiErrorModel(t.ErrorMessage));
+            var errors = modelState.Values.SelectMany(t => t.Errors).Select(t =>
+                new ApiErrorModel(!string.IsNullOrEmpty(t.ErrorMessage) ? t.ErrorMessage : t.Exception.Message)
+            );
             return new BaseResponseModel()
             {
                 Errors = errors
