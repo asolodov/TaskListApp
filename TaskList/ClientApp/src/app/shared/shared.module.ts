@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { NavMenuComponent, DateDiffDirective, SnackBarComponent, StatusPipe } from '.';
+import { NavMenuComponent, DateDiffDirective, SnackBarComponent } from '.';
 import {
   MatButtonModule,
   MatFormFieldModule,
@@ -30,7 +30,6 @@ import { HttpClientModule } from '@angular/common/http';
   ],
   declarations: [
     NavMenuComponent,
-    StatusPipe,
     DateDiffDirective,
     SnackBarComponent
   ],
@@ -46,7 +45,6 @@ import { HttpClientModule } from '@angular/common/http';
     MatButtonToggleModule,
     MatIconModule,
     MatSnackBarModule,
-    StatusPipe,
     DateDiffDirective
   ],
   entryComponents: [
