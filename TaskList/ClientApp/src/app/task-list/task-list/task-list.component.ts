@@ -45,7 +45,7 @@ export class TaskListComponent implements OnInit {
   }
 
   onTaskCompleted(task: Task) {
-    this.taskGrid.updateRow(task.id, { ...task, status: `${Status.Completed}` })
+    this.taskGrid.updateRow(task.id, { ...task, status: Status.Completed })
       .subscribe(
         () => this.notificationService.showSuccessNotification("Task has been completed"),
         (err) => this.notificationService.showErrorNotification(err)
