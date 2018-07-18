@@ -1,6 +1,6 @@
 import { Injectable, } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
-import { SnackBarComponent } from '../';
+import { SnackBarComponent } from '../snack-bar/snack-bar.component';
 
 @Injectable()
 export class UserNotificationService {
