@@ -10,6 +10,7 @@ import { from, Observable, Observer } from 'rxjs';
 import DataSource from 'devextreme/data/data_source';
 import CustomStore from 'devextreme/data/custom_store'
 import { StoreProviderService } from '../store-provider/store-provider.service';
+import { UserCommunicationService } from '../../core/services/api/user-communication.service';
 
 @Component({
   selector: 'app-task-grid',
@@ -51,7 +52,8 @@ export class TaskGridComponent implements OnInit, OnDestroy {
   @ViewChild(DxDataGridComponent) dataGrid: DxDataGridComponent;
 
 
-  constructor(@Inject('TASK_URL') private taskUrl: string, private storeProvider: StoreProviderService) {
+  constructor(@Inject('TASK_URL') private taskUrl: string, private storeProvider: StoreProviderService,
+    private communicationService: UserCommunicationService) {
 
     this._store = this.storeProvider.configureStore({
       url: this.taskUrl,
@@ -85,6 +87,34 @@ export class TaskGridComponent implements OnInit, OnDestroy {
     this.dataGrid.onInitialized.subscribe(() => {
       this.onInitialized.emit();
       this.dataGrid.editing.texts.confirmDeleteMessage = '';
+
+      this.communicationService.taskAdded$.subscribe((task) => {
+        const items = this.dataGrid.instance.getDataSource().items();
+        items.push({ ...task, status: `${Status[task.status]}` });
+        this.dataGrid.instance.repaintRows([items.length]);
+      });
+      this.communicationService.taskUpdated$.subscribe((task) => {
+        const items = this.dataSource.items();
+        let idx = items.findIndex((i) => i.id == task.id);
+        if (idx >= 0) {
+          let item = items[idx];
+          const fixedTask = { ...task, status: `${Status[task.status]}` };
+          for (var prop in fixedTask) {
+            if (task.hasOwnProperty(prop)) {
+              item[prop] = fixedTask[prop];
+            }
+          }
+        }
+        idx = this.dataGrid.instance.getRowIndexByKey(task.id);
+        this.dataGrid.instance.repaintRows([idx]);
+        this._setupFilter(true);
+      });
+      this.communicationService.taskDeleted$.subscribe((task) => {
+        const items = this.dataSource.items();
+        const idx = this.dataGrid.instance.getRowIndexByKey(task.id);
+        items.splice(idx, 1);
+        this.dataGrid.instance.repaintRows([idx]);
+      });
     });
 
     this._intervalId = setInterval(() => {
@@ -128,8 +158,11 @@ export class TaskGridComponent implements OnInit, OnDestroy {
     this.dataGrid.instance.selectRows([key], false);
   }
 
-  private _setupFilter() {
+  private _setupFilter(clearBefore: boolean = false) {
     if (this.dataGrid && this.dataGrid.instance) {
+      if (clearBefore) {
+        this.dataGrid.instance.clearFilter();
+      }
       switch (this.filter) {
         case TaskListFilter.All:
           this.dataGrid.instance.clearFilter();

@@ -76,6 +76,14 @@ namespace TaskList
 
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+            app.UseCors(builder => builder.AllowAnyHeader()
+                                          .AllowAnyMethod()
+                                          .AllowAnyOrigin());
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<TaskHub>("/taskHub");
+            });
 
             app.UseMvc(routes =>
             {
@@ -88,7 +96,7 @@ namespace TaskList
                 .AddService(Microsoft.OData.ServiceLifetime.Singleton, sp => ODataConfig.BuildEdmModel(app.ApplicationServices))
                 .AddService<IEnumerable<IODataRoutingConvention>>(Microsoft.OData.ServiceLifetime.Singleton, sp => ODataRoutingConventions.CreateDefaultWithAttributeRouting("ODataRoute", routes))
                 .AddService<ODataUriResolver>(Microsoft.OData.ServiceLifetime.Singleton, sp => new StringAsEnumResolver { EnableCaseInsensitive = true }));
-           
+
             });
 
             app.UseSpa(spa =>
@@ -104,10 +112,6 @@ namespace TaskList
                 }
             });
 
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<TaskHub>("/taskHub");
-            });
 
             AutoMapperConfig.RegisterMappings();
             EnsureDbCreated(app);
