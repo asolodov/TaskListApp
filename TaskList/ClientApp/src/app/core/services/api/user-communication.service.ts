@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { HubConnectionBuilder, HubConnection } from "@aspnet/signalr";
 import { Task } from '../..';
 import { from, Observable, Subject } from 'rxjs';
@@ -19,9 +19,9 @@ export class UserCommunicationService {
   public taskUpdated$: Observable<Task> = this._taskUpdatedSubject.asObservable();
   public taskDeleted$: Observable<Task> = this._taskDeletedSubject.asObservable();
 
-  constructor() {
+  constructor(@Inject('TASK_HUB_URL') private taskHubUrl) {
     this._connection = new HubConnectionBuilder()
-      .withUrl("/taskHub")
+      .withUrl(taskHubUrl)
       .build();
 
     this._connection.on('TaskAdded', (task) => this._taskAddedSubject.next(task));

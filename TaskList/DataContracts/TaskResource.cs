@@ -21,6 +21,7 @@ namespace TaskList.DataContracts
         public string Description { get; set; }
 
         [Required]
+        [JsonConverter(typeof(StringEnumConverter))]
         [DataMember(Name = Constants.DataMembers.Status)]
         public Status Status { get; set; }
 

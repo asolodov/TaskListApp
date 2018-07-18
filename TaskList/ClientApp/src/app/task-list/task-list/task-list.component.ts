@@ -12,11 +12,12 @@ import { UserNotificationService } from '../../shared';
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.css']
 })
-export class TaskListComponent {
+export class TaskListComponent implements OnInit {
   TaskListFilter = TaskListFilter;
 
   taskDetails: Task;
   taskFilter: TaskListFilter = TaskListFilter.All;
+  selectedTaskId: number;
 
   @ViewChild(TaskGridComponent) taskGrid: TaskGridComponent;
 
@@ -27,10 +28,10 @@ export class TaskListComponent {
     private notificationService: UserNotificationService) {
   }
 
-  onGridInitialized() {
+  ngOnInit(){
     const routeId = this.activatedRoute.snapshot.params['id'];
     if (routeId) {
-      this.taskGrid.selectRow(routeId);
+      this.selectedTaskId = parseInt(routeId);
     }
   }
 

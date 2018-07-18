@@ -9,12 +9,12 @@
 </div>
 <div>
   <div class="task-list">
-    <app-task-grid (onInitialized)="onGridInitialized()"
-                   (onSelectionChanged)="onTaskSelected($event)"
+    <app-task-grid (onSelectionChanged)="onTaskSelected($event)"
                    (onTaskCompleted)="onTaskCompleted($event)"
                    (onTaskDeleted)="onTaskDeleted($event)"
                    [filter]="taskFilter"
-                   [height]="'48vh'"></app-task-grid>
+                   [height]="'48vh'"
+                   [selectedTaskId] ="selectedTaskId"></app-task-grid>
   </div>
   <div class="task-details">
     <app-task-details [task]="taskDetails"></app-task-details>

@@ -54,7 +54,8 @@ namespace TaskList
 
             services.AddDbContext<TaskListDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("SQLite")));
 
-            services.AddSignalR();
+            services.AddSignalR()
+                .AddJsonProtocol(options => options.PayloadSerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc);
 
             services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddScoped<ITaskService, TaskService>();

@@ -14,7 +14,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AppRoutingModule
   ],
   providers: [
-    { provide: 'TASK_URL', useValue: 'api/Task' }],
+    { provide: 'TASK_URL', useValue: 'api/Task' },
+    { provide: 'TASK_HUB_URL', useValue: '/taskHub' }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

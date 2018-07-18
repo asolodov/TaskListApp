@@ -1,6 +1,6 @@
 export enum Status {
-  Active = 0,
-  Completed = 1
+  Active = "Active",
+  Completed = "Completed"
 }
 
 export enum TaskListFilter {
@@ -19,6 +19,10 @@ export interface Task {
   timeToComplete: Date
 }
 
+export interface AdaptiveDataStore {
+  useLocalSource(): void;
+  useRemoteSource(): void;
+}
 
 export interface ApiResponse<T> {
   value: T,
