@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using TaskList.BusinessLogic.Tasks.Models;
+using TaskList.DataAccess.DataMappings;
 
 namespace TaskList.DataAccess
 {
@@ -18,6 +16,7 @@ namespace TaskList.DataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfiguration(new TasksEntityTypeConfiguration());
         }
 
     }

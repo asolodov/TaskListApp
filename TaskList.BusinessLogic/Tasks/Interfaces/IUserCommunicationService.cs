@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using TaskList.BusinessLogic.Tasks.Models;
 
 namespace TaskList.BusinessLogic.Tasks.Interfaces
 {
     public interface IUserCommunicationService
     {
-        Task NotifyTaskAdded(Models.TaskModel task);
-        Task NotifyTaskUpdated(Models.TaskModel task);
-        Task NotifyTaskDeleted(Models.TaskModel task);
+        Task NotifyTaskAdded(TaskModel task);
+
+        Task NotifyTaskUpdated(TaskModel task);
+
+        Task NotifyTaskDeleted(TaskModel task);
     }
 }
